@@ -1,0 +1,45 @@
+{% extends 'prayer_requests/base.html' %}
+
+{% block title %}Edit Prayer Request - Community Prayer Requests{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h2 class="mb-0">Edit Prayer Request</h2>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="title" class="form-label">Title</label>
+                        <input type="text" class="form-control" id="title" name="title" value="{{ prayer_request.title }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Description</label>
+                        <textarea class="form-control" id="description" name="description" rows="5" required>{{ prayer_request.description }}</textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="prayer_type" class="form-label">Prayer Request Type</label>
+                        <select class="form-select" name="prayer_type" id="prayer_type" required>
+                            {% for value, label in prayer_types %}
+                                <option value="{{ value }}" {% if prayer_request.prayer_type == value %}selected{% endif %}>{{ label }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="is_answered">Mark as Answered:</label>
+                        <input type="checkbox" name="is_answered" id="is_answered" {% if prayer_request.is_answered %}checked{% endif %}>
+                    </div>
+                    <!-- Button row with proper styling -->
+                    <div class="d-flex justify-content-center gap-2 mt-4">
+                        <button type="submit" class="btn btn-primary px-4 py-2">Update Prayer Request</button>
+                        <a href="{% url 'prayer_request_detail' prayer_request.pk %}" class="btn btn-secondary px-4 py-2">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

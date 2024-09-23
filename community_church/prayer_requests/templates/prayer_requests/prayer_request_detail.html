@@ -1,0 +1,56 @@
+{% extends 'prayer_requests/base.html' %}
+
+{% block title %}{{ prayer_request.title }} - Community Prayer Requests{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+        <h2 class="mb-0">{{ prayer_request.title }}</h2>
+        {% if user.is_authenticated and user == prayer_request.created_by or user.is_superuser %}
+        <div>
+            <a href="{% url 'edit_prayer_request' prayer_request.pk %}" class="btn btn-light btn-sm me-2">
+                <i class="fas fa-edit"></i> Edit
+            </a>
+            <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                <i class="fas fa-trash"></i> Delete
+            </button>
+        </div>
+        {% endif %}
+    </div>
+    <div class="card-body">
+        <p class="lead">{{ prayer_request.description }}</p>
+        <hr>
+        <div class="d-flex justify-content-between align-items-center">
+            <small class="text-muted">Requested by {{ prayer_request.created_by }}</small>
+            <small class="text-muted">{{ prayer_request.created_at|date:"F d, Y @ h:iA" }}</small>
+        </div>
+    </div>
+    <div class="card-footer">
+        <a href="{% url 'home' %}" class="btn btn-secondary">Back to Prayer Requests</a>
+    </div>
+</div>
+
+{% if user.is_authenticated and user == prayer_request.created_by or user.is_superuser %}
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Confirm Deletion</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete this prayer request?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form action="{% url 'delete_prayer_request' prayer_request.pk %}" method="POST" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

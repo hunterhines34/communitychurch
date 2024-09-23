@@ -1,0 +1,36 @@
+{% extends 'prayer_requests/base.html' %}
+
+{% block title %}About - Community Prayer Requests{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="mb-4">About Community Prayer Requests</h1>
+    <div class="row">
+        <div class="col-md-8">
+            <p class="lead">Community Prayer Requests is a platform dedicated to bringing people together through the power of prayer.</p>
+            <p>Our mission is to create a supportive environment where individuals can share their prayer needs and offer support to others. We believe in the strength of community and the impact of collective prayer.</p>
+            <h2 class="mt-4">Our Vision</h2>
+            <p>To foster a global community united in faith, support, and compassion, where every prayer is heard and every individual feels supported.</p>
+            <h2 class="mt-4">How It Works</h2>
+            <ol>
+                <li>Create an account or sign in</li>
+                <li>Share your prayer requests</li>
+                <li>View and support others' requests</li>
+                <li>Receive updates and encouragement</li>
+            </ol>
+            <p class="mt-4">Join us in making a difference, one prayer at a time.</p>
+        </div>
+        {% if not user.is_authenticated %}
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Get Involved</h5>
+                    <p class="card-text">Ready to join our community? Sign up now to start sharing and supporting prayer requests.</p>
+                    <a href="{% url 'signup' %}" class="btn btn-primary">Sign Up</a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

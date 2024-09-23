@@ -1,0 +1,27 @@
+{% extends 'prayer_requests/base.html' %}
+{% block title %}Types of Prayer Requests - Community Prayer Requests{% endblock %}
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">Types of Prayer Requests</h1>
+    <p class="lead">Here are the different types of prayer requests you can submit or pray for in our community:</p>
+
+    <div class="row">
+        {% for prayer_type in prayer_types %}
+            <div class="col-md-6 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ prayer_type.name }}</h5>
+                        <p class="card-text">{{ prayer_type.description }}</p>
+                        <h6>Examples:</h6>
+                        <ul>
+                            {% for example in prayer_type.examples %}
+                                <li>{{ example }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

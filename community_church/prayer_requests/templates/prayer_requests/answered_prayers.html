@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Answered Prayers</h1>
+<div class="prayer-requests">
+    {% for prayer in answered_prayers %}
+        <div class="prayer-request">
+            <h2>{{ prayer.title }}</h2>
+            <p>{{ prayer.description }}</p>
+            <p>Created by: {{ prayer.user.username }}</p>
+            <p>Answered on: {{ prayer.answered_at|date:"F d, Y @ h:iA" }}</p>
+        </div>
+    {% empty %}
+        <p>No answered prayers yet.</p>
+    {% endfor %}
+</div>
+{% endblock %}
