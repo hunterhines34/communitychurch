@@ -9,6 +9,7 @@ import logging
 from django.utils.timezone import make_aware
 from datetime import datetime
 from django.contrib import messages
+from django.db.models import Count
 
 # Logging 
 logger = logging.getLogger(__name__)
@@ -17,7 +18,8 @@ logger = logging.getLogger(__name__)
 def home(request):
     if request.user.is_authenticated:
         prayer_types = PrayerRequest.PRAYER_TYPES
-        requests = PrayerRequest.objects.all()
+        #requests = PrayerRequest.objects.all()
+        requests = PrayerRequest.objects.filter(is_answered=False)
 
         # Filter by date range
         start_date = request.GET.get('start_date')
@@ -48,8 +50,37 @@ def prayer_request_detail(request, pk):
 # View to see Answered prayers
 @login_required
 def answered_prayers(request):
-    answered_prayers = PrayerRequest.objects.filter(is_answered=True).order_by('-answered_at')
-    return render(request, 'prayer_requests/answered_prayers.html', {'prayers': answered_prayers})
+    answered_prayers = PrayerRequest.objects.filter(is_answered=True)
+    prayer_types = PrayerRequest.PRAYER_TYPES
+    context = {
+        'answered_prayers': answered_prayers,
+        'prayer_types': prayer_types,
+    }
+    return render(request, 'prayer_requests/answered_prayers.html', context)
+
+# View to see Answered prayers
+@login_required
+def mark_prayer_answered(request, pk):
+    prayer_request = get_object_or_404(PrayerRequest, pk=pk)
+    if request.user == prayer_request.created_by or request.user.is_superuser:
+        prayer_request.mark_as_answered()
+        return redirect('answered_prayers')
+    else:
+        # Handle unauthorized access
+        return redirect('home')
+
+# View to mark a prayer as unanswered
+@login_required
+def mark_prayer_unanswered(request, pk):
+    prayer_request = get_object_or_404(PrayerRequest, pk=pk)
+    if request.user == prayer_request.created_by or request.user.is_superuser:
+        prayer_request.is_answered = False
+        prayer_request.answered_at = None
+        prayer_request.save()
+        return redirect('home')
+    else:
+        # Handle unauthorized access
+        return redirect('answered_prayers')    
 
 # View to create a new prayer request
 @login_required
@@ -145,8 +176,6 @@ def error_500(request):
     return render(request, '500.html', status=500)
 
 # Prayer request types
-from django.shortcuts import render
-
 def prayer_request_types(request):
     prayer_types = [
         {
@@ -215,3 +244,26 @@ def prayer_request_types(request):
         }
     ]
     return render(request, 'prayer_requests/prayer_request_types.html', {'prayer_types': prayer_types})
+
+# Prayer Request Reports view
+def report_view(request):
+    total_requests = PrayerRequest.objects.count()
+    answered_prayers = PrayerRequest.objects.filter(is_answered=True).count()
+    open_requests = total_requests - answered_prayers
+
+    recent_requests = PrayerRequest.objects.select_related('created_by').order_by('-created_at')[:10]
+
+    prayer_type_data = PrayerRequest.objects.values('prayer_type').annotate(count=Count('prayer_type'))
+    prayer_type_labels = [dict(PrayerRequest.PRAYER_TYPES)[item['prayer_type']] for item in prayer_type_data]
+    prayer_type_counts = [item['count'] for item in prayer_type_data]
+
+    context = {
+        'total_requests': total_requests,
+        'answered_prayers': answered_prayers,
+        'open_requests': open_requests,
+        'recent_requests': recent_requests,
+        'prayer_type_labels': prayer_type_labels,
+        'prayer_type_data': prayer_type_counts,
+    }
+
+    return render(request, 'prayer_requests/report.html', context)

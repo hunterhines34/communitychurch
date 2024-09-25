@@ -14,5 +14,13 @@ urlpatterns = [
     path('prayer-request/<int:pk>/edit/', views.edit_prayer_request, name='edit_prayer_request'),
     path('prayer-request/<int:pk>/delete/', views.delete_prayer_request, name='delete_prayer_request'),
     path('prayer-request-types/', views.prayer_request_types, name='prayer_request_types'),
-    path('answered-prayers/', views.answered_prayers, name='answered_prayers'),
+    path('answered/', views.answered_prayers, name='answered_prayers'),
+    path('mark-answered/<int:pk>/', views.mark_prayer_answered, name='mark_prayer_answered'),
+    path('mark-unanswered/<int:pk>/', views.mark_prayer_unanswered, name='mark_prayer_unanswered'),
+    path('report/', views.report_view, name='prayer_request_report'),
+    # Password reset urls
+    path('password_reset/', auth_views.PasswordResetView.as_view(), name='password_reset'),
+    path('password_reset/done/', auth_views.PasswordResetDoneView.as_view(), name='password_reset_done'),
+    path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
+    path('reset/done/', auth_views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),
 ]
