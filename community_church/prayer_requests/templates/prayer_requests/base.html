@@ -42,9 +42,6 @@
                             <a class="nav-link" href="{% url 'home' %}"><i class="fas fa-home" aria-hidden="true"></i> <span class="ms-1">Home</span></a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'about' %}"><i class="fas fa-info-circle" aria-hidden="true"></i> <span class="ms-1">About Us</span></a>
-                        </li>
-                        <li class="nav-item">
                             <a class="nav-link" href="{% url 'prayer_request_types' %}"><i class="fas fa-list" aria-hidden="true"></i> <span class="ms-1">Prayer Types</span></a>
                         </li>
                         {% if user.is_authenticated %}
@@ -62,6 +59,9 @@
                                 <a class="nav-link" href="{% url 'prayer_request_report' %}"><i class="fas fa-chart-bar" aria-hidden="true"></i> <span class="ms-1"></span>Prayer Reports</a>
                             </li>
                         {% endif %}
+                        <li class="nav-item"></li>
+                            <a class="nav-link" href="{% url 'about' %}"><i class="fas fa-info-circle" aria-hidden="true"></i> <span class="ms-1">About Us</span></a>
+                        </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 Account <i class="fas fa-user-circle"></i>
@@ -115,6 +115,7 @@
                             <li><a href="{% url 'create_prayer_request' %}">Create Prayer Request</a></li>
                             <li><a href="{% url 'prayer_request_types' %}">Request Types</a></li>
                             <li><a href="{% url 'answered_prayers' %}">Answered Prayers</a></li>
+                            <li><a href="{% url 'prayer_request_report' %}">Prayer Reports</a></li>
                         {% else %}
                             <li><a href="{% url 'login' %}">Login</a></li>
                             <li><a href="{% url 'signup' %}">Sign Up</a></li>

@@ -10,6 +10,8 @@ from django.utils.timezone import make_aware
 from datetime import datetime
 from django.contrib import messages
 from django.db.models import Count
+from itertools import groupby
+from django.db.models.functions import TruncDate
 
 # Logging 
 logger = logging.getLogger(__name__)
@@ -34,8 +36,13 @@ def home(request):
         if prayer_type:
             requests = requests.filter(prayer_type=prayer_type)
 
+        requests = requests.annotate(date=TruncDate('created_at')).order_by('-date', '-created_at')
+        grouped_requests = {
+            date: list(group) for date, group in groupby(requests, key=lambda x: x.date)
+        }
+
         context = {
-            'requests': requests,
+            'grouped_requests': grouped_requests,
             'prayer_types': prayer_types,
         }
         return render(request, 'prayer_requests/home.html', context)
@@ -244,18 +251,20 @@ def prayer_request_types(request):
         }
     ]
     return render(request, 'prayer_requests/prayer_request_types.html', {'prayer_types': prayer_types})
-
 # Prayer Request Reports view
 def report_view(request):
     total_requests = PrayerRequest.objects.count()
     answered_prayers = PrayerRequest.objects.filter(is_answered=True).count()
-    open_requests = total_requests - answered_prayers
+    open_requests = PrayerRequest.objects.filter(is_answered=False).count()
+    recent_requests = PrayerRequest.objects.order_by('-created_at')[:10]
 
-    recent_requests = PrayerRequest.objects.select_related('created_by').order_by('-created_at')[:10]
+    # Prayer Type Chart Data
+    prayer_type_labels = [type[1] for type in PrayerRequest.PRAYER_TYPES]
+    prayer_type_data = [PrayerRequest.objects.filter(prayer_type=type[0]).count() for type in PrayerRequest.PRAYER_TYPES]
 
-    prayer_type_data = PrayerRequest.objects.values('prayer_type').annotate(count=Count('prayer_type'))
-    prayer_type_labels = [dict(PrayerRequest.PRAYER_TYPES)[item['prayer_type']] for item in prayer_type_data]
-    prayer_type_counts = [item['count'] for item in prayer_type_data]
+    # Status Chart Data
+    status_labels = ['Answered', 'Open']
+    status_data = [answered_prayers, open_requests]
 
     context = {
         'total_requests': total_requests,
@@ -263,7 +272,9 @@ def report_view(request):
         'open_requests': open_requests,
         'recent_requests': recent_requests,
         'prayer_type_labels': prayer_type_labels,
-        'prayer_type_data': prayer_type_counts,
+        'prayer_type_data': prayer_type_data,
+        'status_labels': status_labels,
+        'status_data': status_data,
     }
 
     return render(request, 'prayer_requests/report.html', context)

@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'prayer_requests',
     'widget_tweaks',
+    'chartjs',
 ]
 
 MIDDLEWARE = [
