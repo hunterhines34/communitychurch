@@ -1,69 +1,189 @@
 {% extends 'prayer_requests/base.html' %}
 {% block title %}Answered Prayers - Community Prayer Requests{% endblock %}
 {% block content %}
-{% if user.is_authenticated %}
-    <h2 class="mb-4">Answered Prayers</h2>
-    <div class="row mb-4">
-        <div class="col-md-12">
-            <form method="GET" class="form-inline">
-                <div class="input-group mb-3">
-                    <input type="date" name="start_date" class="form-control" placeholder="Start Date">
-                    <input type="date" name="end_date" class="form-control" placeholder="End Date">
-                    <select name="prayer_type" class="form-control">
-                        <option value="">All Types</option>
-                        {% for value, label in prayer_types %}
-                            <option value="{{ value }}">{{ label }}</option>
-                        {% endfor %}
-                    </select>
-                    <button type="submit" class="btn btn-primary">Filter</button>
-                </div>
-            </form>
+<div class="container-fluid px-4 py-5">
+    {% if user.is_authenticated %}
+        <div class="row mb-4 align-items-center">
+            <div class="col-12 col-md-6">
+                <h1 class="display-6 fw-bold text-primary">Answered Prayers</h1>
+                <p class="lead text-muted">Witness the power of faith and community</p>
+            </div>
+            <div class="col-12 col-md-6">
+                <form method="GET" class="prayer-filter-form">
+                    <div class="row g-2">
+                        <div class="col-md-4">
+                            <div class="form-floating">
+                                <input type="date" name="start_date" class="form-control" id="startDateFilter" placeholder="Start Date">
+                                <label for="startDateFilter">Start Date</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-floating">
+                                <input type="date" name="end_date" class="form-control" id="endDateFilter" placeholder="End Date">
+                                <label for="endDateFilter">End Date</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-floating">
+                                <select name="prayer_type" class="form-select" id="prayerTypeFilter">
+                                    <option value="">All Types</option>
+                                    {% for value, label in prayer_types %}
+                                        <option value="{{ value }}">{{ label }}</option>
+                                    {% endfor %}
+                                </select>
+                                <label for="prayerTypeFilter">Prayer Type</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-filter"></i> Apply Filters
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
-    </div>
-    <div class="row">
-        {% for prayer in answered_prayers %}
-            <div class="col-md-4 mb-4">
-                <div class="card h-100">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ prayer.title }}</h5>
-                        <p class="card-text">{{ prayer.description|truncatewords:20 }}</p>
-                        <p class="card-text"><small class="text-muted">Type: {{ prayer.get_prayer_type_display }}</small></p>
-                        <div class="d-flex justify-content-between">
-                            <a href="{% url 'prayer_request_detail' prayer.pk %}" class="btn btn-primary">Read More</a>
-                            {% if user == prayer.created_by or user.is_superuser %}
+
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 prayer-grid">
+            {% for prayer in answered_prayers %}
+                <div class="col">
+                    <div class="card h-100 shadow-sm border-0 position-relative">
+                        <div class="card-body d-flex flex-column">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <h5 class="card-title fw-bold text-primary">{{ prayer.title }}</h5>
+                                <span class="badge bg-success rounded-pill">Answered</span>
+                            </div>
+                            <p class="card-text flex-grow-1">{{ prayer.description|truncatewords:30 }}</p>
+                            <div class="d-flex justify-content-between align-items-center mt-auto">
+                                <small class="text-muted">
+                                    <i class="bi bi-tag"></i> {{ prayer.get_prayer_type_display }}
+                                </small>
+                                <a href="{% url 'prayer_request_detail' prayer.pk %}" class="btn btn-sm btn-outline-primary">
+                                    Read More <i class="bi bi-arrow-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-transparent border-0 pt-0">
+                            <hr class="my-2">
+                            <div class="d-flex justify-content-between small text-muted">
                                 <div>
+                                    <i class="bi bi-person"></i> {{ prayer.created_by }}
+                                </div>
+                                <div>
+                                    <i class="bi bi-calendar"></i> {{ prayer.answered_at|date:"M d, Y" }}
+                                </div>
+                            </div>
+                            {% if user == prayer.created_by or user.is_superuser %}
+                                <div class="mt-2 text-end">
                                     <form action="{% url 'mark_prayer_unanswered' prayer.pk %}" method="post" class="d-inline">
                                         {% csrf_token %}
-                                        <button type="submit" class="btn btn-warning">Mark as Unanswered</button>
+                                        <button type="submit" class="btn btn-sm btn-warning">
+                                            <i class="bi bi-arrow-repeat"></i> Mark as Unanswered
+                                        </button>
                                     </form>
                                 </div>
                             {% endif %}
                         </div>
                     </div>
-                    <div class="card-footer text-muted">
-                        Requested by {{ prayer.created_by }} on {{ prayer.created_at|date:"F d, Y" }}<br>
-                        Answered on {{ prayer.answered_at|date:"F d, Y" }}
+                </div>
+            {% empty %}
+                <div class="col-12">
+                    <div class="card text-center bg-light border-0">
+                        <div class="card-body py-5">
+                            <i class="bi bi-heart-fill text-muted display-4 mb-3"></i>
+                            <h3 class="card-title text-primary">No Answered Prayers Yet</h3>
+                            <p class="card-text lead text-muted mb-4">
+                                Your community's prayers are still being heard. Keep faith and hope alive!
+                            </p>
+                            <div class="d-flex justify-content-center gap-3">
+                                <a href="{% url 'submit_prayer_request' %}" class="btn btn-primary">
+                                    <i class="bi bi-plus-circle"></i> Submit a Prayer Request
+                                </a>
+                                <a href="{% url 'prayer_request_list' %}" class="btn btn-outline-secondary">
+                                    <i class="bi bi-list-ul"></i> View All Prayers
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        {% if answered_prayers.paginator.num_pages > 1 %}
+            <nav aria-label="Prayer pages" class="mt-4">
+                <ul class="pagination justify-content-center">
+                    {% if answered_prayers.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ answered_prayers.previous_page_number }}">Previous</a>
+                        </li>
+                    {% endif %}
+                    
+                    {% for num in answered_prayers.paginator.page_range %}
+                        <li class="page-item {% if num == answered_prayers.number %}active{% endif %}">
+                            <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                        </li>
+                    {% endfor %}
+                    
+                    {% if answered_prayers.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ answered_prayers.next_page_number }}">Next</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        {% endif %}
+
+    {% else %}
+        <div class="row align-items-center">
+            <div class="col-12 col-lg-6">
+                <div class="p-5 bg-light rounded-3">
+                    <div class="container-fluid py-5">
+                        <h1 class="display-5 fw-bold text-primary">Answered Prayers</h1>
+                        <p class="col-md-8 fs-4 text-muted">Discover the transformative power of prayer in our community.</p>
+                        <hr class="my-4">
+                        <p>Sign in or create an account to explore and share answered prayers, connect with fellow believers, and witness God's work.</p>
+                        <div class="d-flex gap-3">
+                            <a class="btn btn-primary btn-lg" href="{% url 'login' %}">
+                                <i class="bi bi-box-arrow-in-right"></i> Sign In
+                            </a>
+                            <a class="btn btn-outline-secondary btn-lg" href="{% url 'signup' %}">
+                                <i class="bi bi-person-plus"></i> Sign Up
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
-        {% empty %}
-            <div class="col-12">
-                <div class="alert alert-info" role="alert">
-                    No answered prayers available yet. Keep praying and believing!
+            <div class="col-12 col-lg-6 d-none d-lg-block">
+                <div class="text-center py-5">
+                    <i class="fas fa-hands-praying display-1 text-primary opacity-75" style="font-size: 12rem;"></i>
                 </div>
             </div>
-        {% endfor %}
-    </div>
-{% else %}
-    <div class="jumbotron">
-        <h1 class="display-4">Answered Prayers</h1>
-        <p class="lead">Join our community to see how God is answering prayers.</p>
-        <hr class="my-4">
-        <p>Sign in or create an account to view answered prayers and submit your own prayer requests.</p>
-        <div class="mt-4">
-            <a class="btn btn-primary btn-lg me-2" href="{% url 'login' %}" role="button">Sign In</a>
-            <a class="btn btn-secondary btn-lg" href="{% url 'signup' %}" role="button">Sign Up</a>
         </div>
-    </div>
-{% endif %}
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const filterForm = document.querySelector('.prayer-filter-form');
+    const prayerGrid = document.querySelector('.prayer-grid');
+
+    filterForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const formData = new FormData(filterForm);
+        const queryParams = new URLSearchParams(formData).toString();
+        
+        fetch(`?${queryParams}`)
+            .then(response => response.text())
+            .then(html => {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                const updatedGrid = doc.querySelector('.prayer-grid');
+                prayerGrid.innerHTML = updatedGrid.innerHTML;
+            })
+            .catch(error => console.error('Error filtering prayers:', error));
+    });
+});
+</script>
 {% endblock %}

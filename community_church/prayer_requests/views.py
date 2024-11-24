@@ -131,15 +131,48 @@ def prayer_request_detail(request, pk):
 # View to see Answered prayers
 @login_required
 def answered_prayers(request):
-    answered_prayers = PrayerRequest.objects.filter(is_answered=True)
+    # Base queryset of answered prayers
+    answered_prayers_qs = PrayerRequest.objects.filter(is_answered=True)
     prayer_types = PrayerRequest.PRAYER_TYPES
+
+    # Filtering logic
+    start_date = request.GET.get('start_date')
+    end_date = request.GET.get('end_date')
+    prayer_type = request.GET.get('prayer_type')
+
+    # Apply date range filter
+    if start_date and end_date:
+        answered_prayers_qs = answered_prayers_qs.filter(
+            answered_at__date__range=[start_date, end_date]
+        )
+    
+    # Apply prayer type filter
+    if prayer_type:
+        answered_prayers_qs = answered_prayers_qs.filter(prayer_type=prayer_type)
+
+    # Sorting
+    answered_prayers_qs = answered_prayers_qs.order_by('-answered_at')
+
+    # Pagination
+    from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+    paginator = Paginator(answered_prayers_qs, 9)  # 9 prayers per page
+    page = request.GET.get('page')
+    try:
+        answered_prayers = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page
+        answered_prayers = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range, deliver last page of results
+        answered_prayers = paginator.page(paginator.num_pages)
+
     context = {
         'answered_prayers': answered_prayers,
         'prayer_types': prayer_types,
     }
     return render(request, 'prayer_requests/answered_prayers.html', context)
 
-# View to see Answered prayers
+# View to mark a prayer as answered
 @login_required
 def mark_prayer_answered(request, pk):
     prayer_request = get_object_or_404(PrayerRequest, pk=pk)
