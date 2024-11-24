@@ -64,6 +64,16 @@
     .bg-soft-warning {
         background: linear-gradient(45deg, #fbbf24, #fcd34d);
     }
+    .hover-lift {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .hover-lift:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+    .card-body {
+        cursor: pointer;
+    }
 </style>
 {% endblock %}
 
@@ -87,69 +97,77 @@
     <div class="row g-4">
         <!-- Summary Statistics -->
         <div class="col-md-3">
-            <div class="stat-card card bg-soft-primary">
-                <div class="card-body">
-                    <i class="fas fa-pray stat-icon text-white"></i>
-                    <div class="stat-title text-white-50">Total Prayers</div>
-                    <div class="stat-value">{{ total_requests }}</div>
+            <a href="{% url 'home' %}?status=total" class="text-decoration-none">
+                <div class="stat-card card bg-soft-primary hover-lift">
+                    <div class="card-body">
+                        <i class="fas fa-pray stat-icon text-white"></i>
+                        <div class="stat-title text-white-50">Total Prayers</div>
+                        <div class="stat-value">{{ total_requests }}</div>
+                    </div>
                 </div>
-            </div>
+            </a>
         </div>
         <div class="col-md-3">
-            <div class="stat-card card bg-soft-success">
-                <div class="card-body">
-                    <i class="fas fa-check-circle stat-icon text-white"></i>
-                    <div class="stat-title text-white-50">Answered Prayers</div>
-                    <div class="stat-value">{{ answered_prayers }}</div>
+            <a href="{% url 'answered_prayers' %}" class="text-decoration-none">
+                <div class="stat-card card bg-soft-success hover-lift">
+                    <div class="card-body">
+                        <i class="fas fa-check-circle stat-icon text-white"></i>
+                        <div class="stat-title text-white-50">Answered Prayers</div>
+                        <div class="stat-value">{{ answered_prayers }}</div>
+                    </div>
                 </div>
-            </div>
+            </a>
         </div>
         <div class="col-md-3">
-            <div class="stat-card card bg-soft-info">
-                <div class="card-body">
-                    <i class="fas fa-users stat-icon text-white"></i>
-                    <div class="stat-title text-white-50">Active Users</div>
-                    <div class="stat-value">{{ active_users }} / {{ total_users }}</div>
+            <a href="{% url 'home' %}?status=open" class="text-decoration-none">
+                <div class="stat-card card bg-soft-info hover-lift">
+                    <div class="card-body">
+                        <i class="fas fa-users stat-icon text-white"></i>
+                        <div class="stat-title text-white-50">Active Users</div>
+                        <div class="stat-value">{{ active_users }} / {{ total_users }}</div>
+                    </div>
                 </div>
-            </div>
+            </a>
         </div>
         <div class="col-md-3">
-            <div class="stat-card card bg-soft-warning">
-                <div class="card-body">
-                    <i class="fas fa-clock stat-icon text-white"></i>
-                    <div class="stat-title text-white-50">Avg. Response Time</div>
-                    <div class="stat-value">{{ avg_response_days }} days</div>
+            <a href="{% url 'profile' %}" class="text-decoration-none">
+                <div class="stat-card card bg-soft-warning hover-lift">
+                    <div class="card-body">
+                        <i class="fas fa-clock stat-icon text-white"></i>
+                        <div class="stat-title text-white-50">Avg. Response Time</div>
+                        <div class="stat-value">{{ avg_response_days }} days</div>
+                    </div>
                 </div>
-            </div>
+            </a>
         </div>
     </div>
 
     <div class="row mt-4">
         <div class="col-md-6">
-            <div class="chart-container">
+            <div class="chart-container" style="height: 400px;">
                 <h5 class="mb-4">Prayer Request Types</h5>
-                <canvas id="prayerTypeChart"></canvas>
+                <div id="prayerTypeChart" style="height: 100%;"></div>
             </div>
         </div>
         <div class="col-md-6">
-            <div class="chart-container">
+            <div class="chart-container" style="height: 400px;">
                 <h5 class="mb-4">Prayer Request Status</h5>
-                <canvas id="statusChart"></canvas>
+                <div id="statusChart" style="height: 100%;"></div>
             </div>
         </div>
     </div>
 
     <div class="row mt-4">
         <div class="col-md-8">
-            <div class="chart-container">
+            <div class="chart-container" style="height: 400px;">
                 <h5 class="mb-4">Prayer Request Trends</h5>
-                <canvas id="trendChart"></canvas>
+                <div id="trendChart" style="height: 100%;"></div>
             </div>
         </div>
         <div class="col-md-4">
-            <div class="chart-container">
+            <div class="chart-container" style="height: 400px;">
                 <h5 class="mb-4">Time of Day Distribution</h5>
-                <canvas id="hourChart"></canvas>
+                <div id="hourChart" style="height: 100%;"></div>
             </div>
         </div>
     </div>
@@ -202,155 +220,195 @@
 
 {% block extra_js %}
 <script>
+    // Immediate debugging to verify script execution
+    console.log('Report page script is running!');
+    
     document.addEventListener('DOMContentLoaded', function() {
-        // Chart color scheme
-        const chartColors = {
-            primary: ['#6366f1', '#818cf8', '#c7d2fe'],
-            success: ['#34d399', '#6ee7b7', '#d1fae5'],
-            warning: ['#fbbf24', '#fcd34d', '#fef3c7'],
-            info: ['#60a5fa', '#93c5fd', '#dbeafe']
+        console.log('DOMContentLoaded event fired!');
+        
+        // Validate chart containers
+        const chartContainers = [
+            '#prayerTypeChart', 
+            '#statusChart', 
+            '#trendChart', 
+            '#hourChart'
+        ];
+
+        let missingContainers = chartContainers.filter(containerId => 
+            !document.querySelector(containerId)
+        );
+
+        if (missingContainers.length > 0) {
+            console.error('Missing chart containers:', missingContainers);
+            return;
+        }
+
+        // Color scheme
+        const colors = {
+            primary: '#6366f1',
+            success: '#34d399',
+            warning: '#fbbf24',
+            info: '#60a5fa'
         };
 
-        // Common chart options
-        const commonOptions = {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    position: 'bottom',
-                    labels: {
-                        padding: 20,
-                        font: { size: 12 }
-                    }
+        // Safe JSON parsing function
+        function safeJSONParse(jsonString, defaultValue = []) {
+            try {
+                return JSON.parse(jsonString);
+            } catch (error) {
+                console.error('JSON parsing error:', error);
+                console.error('Problematic JSON string:', jsonString);
+                return defaultValue;
+            }
+        }
+
+        // Wrap chart creation in a function with extensive error handling
+        function createChart(elementId, options) {
+            try {
+                const chartElement = document.querySelector(elementId);
+                if (!chartElement) {
+                    console.error(`Chart element not found: ${elementId}`);
+                    return null;
                 }
+
+                // Default common options
+                const defaultOptions = {
+                    chart: {
+                        toolbar: { show: false },
+                        animations: {
+                            enabled: true,
+                            easing: 'easeinout',
+                            speed: 800
+                        },
+                        fontFamily: 'inherit'
+                    },
+                    legend: {
+                        position: 'bottom',
+                        horizontalAlign: 'center'
+                    },
+                    responsive: [{
+                        breakpoint: 480,
+                        options: {
+                            legend: {
+                                position: 'bottom'
+                            }
+                        }
+                    }]
+                };
+
+                // Merge default options with provided options
+                const mergedOptions = {
+                    ...defaultOptions,
+                    ...options,
+                    chart: {
+                        ...defaultOptions.chart,
+                        ...options.chart
+                    }
+                };
+
+                const chart = new ApexCharts(chartElement, mergedOptions);
+                chart.render();
+                console.log(`Chart ${elementId} rendered successfully`);
+                return chart;
+            } catch (error) {
+                console.error(`Detailed error creating chart ${elementId}:`, error);
+                return null;
+            }
+        }
+
+        // Prepare chart data
+        const chartData = {
+            prayerType: {
+                series: safeJSONParse("{{ prayer_type_data|escapejs }}"),
+                labels: safeJSONParse("{{ prayer_type_labels|escapejs }}")
+            },
+            status: {
+                series: safeJSONParse("{{ status_data|escapejs }}"),
+                labels: safeJSONParse("{{ status_labels|escapejs }}")
+            },
+            trend: {
+                total: safeJSONParse("{{ trend_total_data|escapejs }}"),
+                answered: safeJSONParse("{{ trend_answered_data|escapejs }}"),
+                labels: safeJSONParse("{{ trend_labels|escapejs }}")
+            },
+            hour: {
+                data: safeJSONParse("{{ hour_data|escapejs }}"),
+                labels: safeJSONParse("{{ hour_labels|escapejs }}")
             }
         };
 
+        console.log('Parsed Chart Data:', chartData);
+
         // Prayer Type Chart
-        const prayerTypeCtx = document.getElementById('prayerTypeChart');
-        if (prayerTypeCtx) {
-            new Chart(prayerTypeCtx, {
-                type: 'doughnut',
-                data: {
-                    labels: {{ prayer_type_labels|safe }},
-                    datasets: [{
-                        data: {{ prayer_type_data|safe }},
-                        backgroundColor: [
-                            chartColors.primary[0],
-                            chartColors.success[0],
-                            chartColors.warning[0],
-                            chartColors.info[0]
-                        ]
-                    }]
-                },
-                options: {
-                    ...commonOptions,
-                    cutout: '60%'
-                }
-            });
-        }
+        createChart("#prayerTypeChart", {
+            chart: { type: 'donut', height: 350 },
+            series: chartData.prayerType.series,
+            labels: chartData.prayerType.labels,
+            colors: [colors.primary, colors.success, colors.warning, colors.info]
+        });
 
         // Status Chart
-        const statusCtx = document.getElementById('statusChart');
-        if (statusCtx) {
-            new Chart(statusCtx, {
-                type: 'pie',
-                data: {
-                    labels: {{ status_labels|safe }},
-                    datasets: [{
-                        data: {{ status_data|safe }},
-                        backgroundColor: [
-                            chartColors.success[0],
-                            chartColors.warning[0]
-                        ]
-                    }]
-                },
-                options: commonOptions
-            });
-        }
+        createChart("#statusChart", {
+            chart: { type: 'pie', height: 350 },
+            series: chartData.status.series,
+            labels: chartData.status.labels,
+            colors: [colors.success, colors.warning]
+        });
 
         // Trend Chart
-        const trendCtx = document.getElementById('trendChart');
-        if (trendCtx) {
-            new Chart(trendCtx, {
-                type: 'line',
-                data: {
-                    labels: {{ trend_labels|safe }},
-                    datasets: [
-                        {
-                            label: 'Total Requests',
-                            data: {{ trend_total_data|safe }},
-                            borderColor: chartColors.primary[0],
-                            backgroundColor: chartColors.primary[2],
-                            tension: 0.3,
-                            fill: true
-                        },
-                        {
-                            label: 'Answered Requests',
-                            data: {{ trend_answered_data|safe }},
-                            borderColor: chartColors.success[0],
-                            backgroundColor: chartColors.success[2],
-                            tension: 0.3,
-                            fill: true
-                        }
-                    ]
-                },
-                options: {
-                    ...commonOptions,
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            title: {
-                                display: true,
-                                text: 'Number of Requests'
-                            }
-                        },
-                        x: {
-                            title: {
-                                display: true,
-                                text: 'Date'
-                            }
-                        }
-                    }
+        createChart("#trendChart", {
+            chart: { type: 'area', height: 350 },
+            series: [
+                {
+                    name: 'Total Requests',
+                    data: chartData.trend.total
+                }, 
+                {
+                    name: 'Answered Requests',
+                    data: chartData.trend.answered
                 }
-            });
-        }
+            ],
+            xaxis: {
+                categories: chartData.trend.labels,
+                title: { text: 'Date' }
+            },
+            yaxis: {
+                title: { text: 'Number of Requests' }
+            },
+            colors: [colors.primary, colors.success],
+            fill: {
+                type: 'gradient',
+                gradient: {
+                    shadeIntensity: 1,
+                    opacityFrom: 0.7,
+                    opacityTo: 0.3
+                }
+            },
+            stroke: { curve: 'smooth' }
+        });
 
         // Hour Distribution Chart
-        const hourCtx = document.getElementById('hourChart');
-        if (hourCtx) {
-            new Chart(hourCtx, {
-                type: 'bar',
-                data: {
-                    labels: {{ hour_labels|safe }}.map(h => `${h}:00`),
-                    datasets: [{
-                        label: 'Prayer Requests',
-                        data: {{ hour_data|safe }},
-                        backgroundColor: chartColors.info[1],
-                        borderColor: chartColors.info[0],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    ...commonOptions,
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            title: {
-                                display: true,
-                                text: 'Number of Requests'
-                            }
-                        },
-                        x: {
-                            title: {
-                                display: true,
-                                text: 'Hour of Day'
-                            }
-                        }
-                    }
+        createChart("#hourChart", {
+            chart: { type: 'bar', height: 350 },
+            series: [{
+                name: 'Prayer Requests',
+                data: chartData.hour.data
+            }],
+            xaxis: {
+                categories: chartData.hour.labels,
+                title: { text: 'Hour of Day' }
+            },
+            yaxis: {
+                title: { text: 'Number of Requests' }
+            },
+            colors: [colors.info],
+            plotOptions: {
+                bar: {
+                    borderRadius: 4,
+                    columnWidth: '60%'
                 }
-            });
-        }
+            }
+        });
     });
 </script>
 {% endblock %}

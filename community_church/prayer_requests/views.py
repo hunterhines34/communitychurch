@@ -337,19 +337,19 @@ def report_view(request):
     )
 
     # Create a complete date range with zeros
-    date_range = {(start_date + timedelta(days=x)).strftime('%Y-%m-%d'): {'total': 0, 'answered': 0}
+    date_range = {(start_date + timedelta(days=x)).strftime('%m/%d/%Y'): {'total': 0, 'answered': 0}
                  for x in range(days)}
     
     # Fill in actual counts
     for entry in daily_counts:
-        date_str = entry['date'].strftime('%Y-%m-%d')
+        date_str = entry['date'].strftime('%m/%d/%Y')
         date_range[date_str] = {
             'total': entry['total'],
             'answered': entry['answered']
         }
 
     # Time of Day Analysis
-    hour_distribution = (
+    hour_analysis = (
         PrayerRequest.objects
         .filter(created_at__date__range=[start_date, end_date])
         .annotate(hour=ExtractHour('created_at'))
@@ -358,12 +358,19 @@ def report_view(request):
         .order_by('hour')
     )
 
-    hours = list(range(24))
-    hour_counts = [0] * 24
-    for entry in hour_distribution:
-        hour_counts[entry['hour']] = entry['count']
+    # Prepare data for charts
+    trend_labels = list(date_range.keys())
+    trend_total_data = [date_range[date]['total'] for date in trend_labels]
+    trend_answered_data = [date_range[date]['answered'] for date in trend_labels]
 
-    # Prepare context with proper JSON serialization
+    # Convert 24h to 12h format with AM/PM
+    hour_labels = [
+        (f"{h%12 or 12}:00 {'AM' if h<12 else 'PM'}")
+        for h in [entry['hour'] for entry in hour_analysis]
+    ]
+    hour_data = [entry['count'] for entry in hour_analysis]
+
+    # Ensure JSON serialization
     context = {
         'total_requests': total_requests,
         'answered_prayers': answered_prayers,
@@ -372,16 +379,17 @@ def report_view(request):
         'total_users': total_users,
         'active_users': active_users,
         'avg_response_days': avg_days,
-        'prayer_type_labels': json.dumps(prayer_type_labels, cls=DjangoJSONEncoder),
+
+        # Chart data with JSON-safe serialization
         'prayer_type_data': json.dumps(prayer_type_data, cls=DjangoJSONEncoder),
-        'status_labels': json.dumps(status_labels, cls=DjangoJSONEncoder),
+        'prayer_type_labels': json.dumps(prayer_type_labels, cls=DjangoJSONEncoder),
         'status_data': json.dumps(status_data, cls=DjangoJSONEncoder),
-        'trend_labels': json.dumps(list(date_range.keys()), cls=DjangoJSONEncoder),
-        'trend_total_data': json.dumps([d['total'] for d in date_range.values()], cls=DjangoJSONEncoder),
-        'trend_answered_data': json.dumps([d['answered'] for d in date_range.values()], cls=DjangoJSONEncoder),
-        'hour_labels': json.dumps(hours, cls=DjangoJSONEncoder),
-        'hour_data': json.dumps(hour_counts, cls=DjangoJSONEncoder),
-        'selected_days': days,
+        'status_labels': json.dumps(status_labels, cls=DjangoJSONEncoder),
+        'trend_labels': json.dumps(trend_labels, cls=DjangoJSONEncoder),
+        'trend_total_data': json.dumps(trend_total_data, cls=DjangoJSONEncoder),
+        'trend_answered_data': json.dumps(trend_answered_data, cls=DjangoJSONEncoder),
+        'hour_labels': json.dumps(hour_labels, cls=DjangoJSONEncoder),
+        'hour_data': json.dumps(hour_data, cls=DjangoJSONEncoder)
     }
 
     return render(request, 'prayer_requests/report.html', context)
