@@ -1,78 +1,412 @@
 :root {
-    --primary-color: #4a6cf7;
-    --secondary-color: #6c757d;
-    --light-color: #f8f9fa;
-    --dark-color: #343a40;
+    --primary-color: #2563eb;
+    --secondary-color: #1e40af;
+    --accent-color: #3b82f6;
+    --text-color: #1e293b;
+    --light-bg: #f8fafc;
+    --footer-bg: #1e293b;
 }
 
 body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-    background-color: #f4f7fa;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Poppins', sans-serif;
+    background-color: var(--light-bg);
+    color: var(--text-color);
+    font-size: 0.95rem;
+    line-height: 1.5;
 }
 
 main {
     flex: 1 0 auto;
 }
 
+/* Navbar Styles */
 .navbar {
-    background: linear-gradient(135deg, var(--primary-color), #6a11cb);
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    background: var(--footer-bg) !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    padding: 0.5rem 0;
 }
 
 .navbar-brand {
-    font-weight: 700;
-    letter-spacing: -0.5px;
-    color: var(--light-color) !important;
+    font-weight: 600;
+    font-size: 1.2rem;
+    color: white !important;
+}
+
+.navbar-brand i {
+    font-size: 1.2rem;
 }
 
 .nav-link {
-    transition: all 0.3s ease;
-    color: rgba(255,255,255,0.8) !important;
+    font-weight: 500;
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.9) !important;
+    transition: all 0.2s ease;
+    padding: 0.5rem 0.75rem !important;
+    border-radius: 6px;
 }
 
 .nav-link:hover {
-    transform: translateY(-2px);
-    color: var(--light-color) !important;
+    color: white !important;
+    transform: translateY(-1px);
+    background: rgba(255,255,255,0.1);
 }
 
 .dropdown-menu {
     border: none;
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    background-color: var(--light-color);
+    border-radius: 8px;
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
 }
 
 .dropdown-item {
-    transition: background-color 0.3s ease;
+    padding: 0.5rem 1rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
 }
 
 .dropdown-item:hover {
-    background-color: rgba(74, 108, 247, 0.1);
+    background-color: var(--accent-color);
+    color: white;
+    transform: translateX(3px);
 }
 
+.dropdown-item i {
+    width: 16px;
+    margin-right: 8px;
+    font-size: 0.9rem;
+}
+
+/* Card Styles */
+.card {
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    background: white;
+}
+
+.card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Button Styles */
+.btn {
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-weight: 500;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-primary:hover {
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
+    transform: translateY(-1px);
+}
+
+/* Footer Styles */
 .footer {
-    background-color: var(--light-color);
-    border-top: 1px solid #e9ecef;
+    background-color: var(--footer-bg);
+    color: white;
+    padding: 3rem 0 1.5rem;
+    margin-top: 2rem;
+}
+
+.footer h5 {
+    color: white;
+    font-weight: 600;
+    margin-bottom: 1.25rem;
+    font-size: 1rem;
+}
+
+.footer p {
+    color: rgba(255,255,255,0.8);
+    font-size: 0.9rem;
 }
 
 .footer a {
-    color: var(--dark-color);
+    color: rgba(255,255,255,0.8);
     text-decoration: none;
-    transition: color 0.3s ease;
+    transition: all 0.2s ease;
+    display: inline-block;
+    font-size: 0.9rem;
 }
 
 .footer a:hover {
+    color: white;
+    transform: translateX(3px);
+}
+
+.footer .list-unstyled li {
+    margin-bottom: 0.5rem;
+}
+
+.footer .list-unstyled a {
+    display: flex;
+    align-items: center;
+}
+
+.footer .list-unstyled a:before {
+    content: "\f054";
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    margin-right: 8px;
+    font-size: 0.7rem;
+    transition: transform 0.2s ease;
+}
+
+.footer .list-unstyled a:hover:before {
+    transform: translateX(3px);
+}
+
+.footer .social-links {
+    display: flex;
+    gap: 1rem;
+}
+
+.footer .social-links a {
+    background: rgba(255,255,255,0.1);
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+}
+
+.footer .social-links a i {
+    font-size: 0.9rem;
+}
+
+.footer .social-links a:hover {
+    background: var(--primary-color);
+    transform: translateY(-3px);
+}
+
+.footer hr {
+    border-color: rgba(255,255,255,0.1);
+    margin: 1.5rem 0;
+}
+
+/* Form Styles */
+.form-control {
+    border-radius: 6px;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #e2e8f0;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+}
+
+.form-control:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(37,99,235,0.1);
+}
+
+/* Alert Styles */
+.alert {
+    border: none;
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
+}
+
+/* Loading Spinner */
+.spinner-border {
+    color: var(--primary-color);
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+/* Prayer Stats Card */
+.prayer-stats {
+    background-color: white;
+    border-radius: 8px;
+    padding: 1.25rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.prayer-stats h5 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.prayer-stats small {
+    font-size: 0.8rem;
+}
+
+.prayer-stats h4 {
+    font-size: 1.5rem;
+    font-weight: 600;
     color: var(--primary-color);
 }
 
-.social-links a {
-    transition: color 0.3s ease;
+/* Filter Section */
+.filter-section {
+    background-color: white;
+    border-radius: 8px;
+    padding: 1.25rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
-.social-links a:hover {
-    color: var(--primary-color) !important;
+.filter-section .form-label {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-color);
+}
+
+/* Dashboard Layout Styles */
+.dashboard {
+    height: 100vh;
+    overflow: hidden;
+    background-color: var(--light-bg);
+}
+
+.dashboard-wrapper {
+    display: flex;
+    height: 100%;
+    width: 100%;
+}
+
+/* Sidebar Styles */
+.sidebar {
+    width: 250px;
+    background-color: var(--footer-bg);
+    color: white;
+    transition: width 0.3s ease;
+    position: relative;
+    z-index: 1000;
+}
+
+.sidebar-collapsed {
+    width: 70px;
+}
+
+.sidebar-collapsed .sidebar-link span {
+    display: none;
+}
+
+.sidebar-header {
+    padding: 1rem;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.sidebar-brand {
+    color: white !important;
+    font-size: 1.2rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+}
+
+.sidebar-menu {
+    padding: 0;
+}
+
+.sidebar-item {
+    margin: 0;
+}
+
+.sidebar-link {
+    color: rgba(255,255,255,0.8);
+    padding: 0.75rem 1rem;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.sidebar-link i {
+    margin-right: 0.75rem;
+    width: 20px;
+    text-align: center;
+}
+
+.sidebar-link:hover {
+    background-color: rgba(255,255,255,0.1);
+    color: white;
+}
+
+.sidebar-link.active {
+    background-color: rgba(255,255,255,0.2);
+    color: white;
+}
+
+/* Main Content Area */
+.main-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition: width 0.3s ease;
+}
+
+.main-content.sidebar-collapsed {
+    width: calc(100% - 70px);
+}
+
+/* Top Navbar */
+.top-navbar {
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    padding: 0.75rem 1rem;
+}
+
+.btn-toggle-sidebar {
+    background: none;
+    border: none;
+    color: var(--text-color);
+    font-size: 1.2rem;
+    padding: 0.5rem;
+    margin-right: 1rem;
+}
+
+.top-navbar-right {
+    display: flex;
+    align-items: center;
+}
+
+/* Page Content */
+.page-content {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 1.5rem;
+    background-color: var(--light-bg);
+}
+
+/* Dashboard Footer */
+.dashboard-footer {
+    background-color: white;
+    border-top: 1px solid rgba(0,0,0,0.1);
+    padding: 1rem;
+}
+
+.dashboard-footer .footer-social-links {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.dashboard-footer .footer-social-links a {
+    color: var(--text-color);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.dashboard-footer .footer-social-links a:hover {
+    color: var(--primary-color);
 }
 
 /* Responsive adjustments */
@@ -83,5 +417,31 @@ main {
     
     .dropdown-menu {
         text-align: center;
+    }
+    
+    .footer .social-links {
+        justify-content: center;
+    }
+
+    .prayer-stats h4 {
+        font-size: 1.25rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        position: fixed;
+        left: -250px;
+        top: 0;
+        bottom: 0;
+        z-index: 1050;
+    }
+
+    .sidebar.show {
+        left: 0;
+    }
+
+    .main-content {
+        width: 100%;
     }
 }

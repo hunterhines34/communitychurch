@@ -7,121 +7,129 @@
     {% load static %}
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Custom CSS -->
-    <link rel="stylesheet" type="text/css" href="{% static 'css/custom.css' %}">
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/custom.css' %}">
+    <!-- ApexCharts JS -->
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.41.0/dist/apexcharts.min.js"></script>
     {% block extra_css %}{% endblock %}
 </head>
-<body class="d-flex flex-column h-100">
-    <header>
-        <nav class="navbar navbar-expand-lg navbar-dark">
-            <div class="container-fluid">
-                <a class="navbar-brand" href="{% url 'home' %}">
+<body class="dashboard">
+    <div class="dashboard-wrapper">
+        <!-- Sidebar -->
+        <nav id="sidebar" class="sidebar">
+            <div class="sidebar-header">
+                <a href="{% url 'home' %}" class="sidebar-brand">
                     <i class="fas fa-pray me-2"></i>Community Prayer
                 </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav ms-auto">
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'home' %}"><i class="fas fa-home" aria-hidden="true"></i> <span class="ms-1">Home</span></a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'prayer_request_types' %}"><i class="fas fa-list" aria-hidden="true"></i> <span class="ms-1">Prayer Types</span></a>
-                        </li>
-                        {% if user.is_authenticated %}
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'create_prayer_request' %}"><i class="fas fa-plus" aria-hidden="true"></i> <span class="ms-1">New Prayer Request</span></a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'answered_prayers' %}"><i class="fas fa-check" aria-hidden="true"></i> <span class="ms-1">Answered Prayers</span></a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'prayer_request_report' %}"><i class="fas fa-chart-bar" aria-hidden="true"></i> <span class="ms-1">Prayer Reports</span></a>
-                            </li>
-                        {% endif %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'about' %}"><i class="fas fa-info-circle" aria-hidden="true"></i> <span class="ms-1">About Us</span></a>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="fas fa-user-circle"></i> <span class="ms-1">Account</span>
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="navbarDropdown">
-                                {% if user.is_authenticated %}
-                                    {% if user.is_superuser %}
-                                        <li><a class="dropdown-item" href="{% url 'admin:index' %}"><i class="fas fa-cog"></i> Admin Dashboard</a></li>
+            </div>
+            <ul class="sidebar-menu list-unstyled">
+                <li class="sidebar-item">
+                    <a href="{% url 'home' %}" class="sidebar-link"><i class="fas fa-home"></i> <span>Home</span></a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="{% url 'prayer_request_types' %}" class="sidebar-link"><i class="fas fa-list"></i> <span>Prayer Types</span></a>
+                </li>
+                {% if user.is_authenticated %}
+                    <li class="sidebar-item">
+                        <a href="{% url 'create_prayer_request' %}" class="sidebar-link"><i class="fas fa-plus"></i> <span>New Prayer Request</span></a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a href="{% url 'answered_prayers' %}" class="sidebar-link"><i class="fas fa-check"></i> <span>Answered Prayers</span></a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a href="{% url 'prayer_request_report' %}" class="sidebar-link"><i class="fas fa-chart-bar"></i> <span>Prayer Reports</span></a>
+                    </li>
+                {% endif %}
+                <li class="sidebar-item">
+                    <a href="{% url 'about' %}" class="sidebar-link"><i class="fas fa-info-circle"></i> <span>About Us</span></a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Main Content Area -->
+        <div class="main-content">
+            <!-- Top Navigation -->
+            <header class="top-navbar">
+                <div class="container-fluid">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <button id="sidebar-toggle" class="btn btn-toggle-sidebar">
+                            <i class="fas fa-bars"></i>
+                        </button>
+                        <div class="top-navbar-right">
+                            <div class="dropdown">
+                                <a href="#" class="dropdown-toggle nav-link" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fas fa-user-circle"></i> <span class="ms-1">Account</span>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                    {% if user.is_authenticated %}
+                                        {% if user.is_superuser %}
+                                            <li><a class="dropdown-item" href="{% url 'admin:index' %}"><i class="fas fa-cog"></i> Admin Dashboard</a></li>
+                                            <li><hr class="dropdown-divider"></li>
+                                        {% endif %}
+                                        <li><a class="dropdown-item" href="{% url 'profile' %}"><i class="fas fa-user"></i> Profile</a></li>
                                         <li><hr class="dropdown-divider"></li>
-                                    {% endif %}
-                                    <li><a class="dropdown-item" href="{% url 'profile' %}"><i class="fas fa-user"></i> Profile</a></li>
-                                    <li><hr class="dropdown-divider"></li>
-                                    <li>
                                         <form action="{% url 'logout' %}" method="POST">
                                             {% csrf_token %}
                                             <button type="submit" class="dropdown-item"><i class="fas fa-sign-out-alt"></i> Logout</button>
                                         </form>
-                                    </li>
-                                {% else %}
-                                    <li><a class="dropdown-item" href="{% url 'login' %}"><i class="fas fa-sign-in-alt"></i> Login</a></li>
-                                    <li><a class="dropdown-item" href="{% url 'signup' %}"><i class="fas fa-user-plus"></i> Sign Up</a></li>
-                                {% endif %}
-                            </ul>
-                        </li>
-                    </ul>
-                </div>                
-            </div>
-        </nav>
-    </header>
-
-    <main class="flex-shrink-0">
-        <div class="container-fluid px-4 py-4">
-            {% block content %}
-            {% endblock %}
-        </div>
-    </main>
-
-    <footer class="footer mt-auto py-5">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-4 mb-4">
-                    <h5 class="text-dark mb-3">Community Prayer</h5>
-                    <p class="text-muted">Uniting people through the power of prayer and community support.</p>
-                </div>
-                <div class="col-md-4 mb-4">
-                    <h5 class="text-dark mb-3">Quick Links</h5>
-                    <ul class="list-unstyled">
-                        <li class="mb-2"><a href="{% url 'home' %}" class="text-muted">Home</a></li>
-                        <li class="mb-2"><a href="{% url 'about' %}" class="text-muted">About</a></li>
-                        {% if user.is_authenticated %}
-                            <li class="mb-2"><a href="{% url 'create_prayer_request' %}" class="text-muted">Create Prayer Request</a></li>
-                            <li class="mb-2"><a href="{% url 'answered_prayers' %}" class="text-muted">Answered Prayers</a></li>
-                        {% else %}
-                            <li class="mb-2"><a href="{% url 'login' %}" class="text-muted">Login</a></li>
-                            <li class="mb-2"><a href="{% url 'signup' %}" class="text-muted">Sign Up</a></li>
-                        {% endif %}
-                    </ul>
-                </div>
-                <div class="col-md-4 mb-4">
-                    <h5 class="text-dark mb-3">Connect With Us</h5>
-                    <div class="social-links">
-                        <a href="#" class="text-muted me-3"><i class="fab fa-facebook-f fa-lg"></i></a>
-                        <a href="#" class="text-muted me-3"><i class="fab fa-twitter fa-lg"></i></a>
-                        <a href="#" class="text-muted me-3"><i class="fab fa-instagram fa-lg"></i></a>
-                        <a href="#" class="text-muted"><i class="fab fa-linkedin-in fa-lg"></i></a>
+                                    {% else %}
+                                        <li><a class="dropdown-item" href="{% url 'login' %}"><i class="fas fa-sign-in-alt"></i> Login</a></li>
+                                        <li><a class="dropdown-item" href="{% url 'signup' %}"><i class="fas fa-user-plus"></i> Sign Up</a></li>
+                                    {% endif %}
+                                </ul>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <hr class="my-4">
-            <div class="text-center text-muted">
-                <p class="mb-0">&copy; 2024 Community Prayer. All rights reserved.</p>
-            </div>
+            </header>
+
+            <!-- Page Content -->
+            <main class="page-content">
+                <div class="container-fluid">
+                    {% block content %}
+                    {% endblock %}
+                </div>
+            </main>
+
+            <!-- Footer -->
+            <footer class="dashboard-footer">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p class="mb-0">&copy; 2024 Community Prayer. All rights reserved.</p>
+                        </div>
+                        <div class="col-md-6 text-md-end">
+                            <div class="footer-social-links">
+                                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                                <a href="#"><i class="fab fa-twitter"></i></a>
+                                <a href="#"><i class="fab fa-instagram"></i></a>
+                                <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </footer>
         </div>
-    </footer>
+    </div>
 
     <!-- Bootstrap JS Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebar = document.getElementById('sidebar');
+            const sidebarToggle = document.getElementById('sidebar-toggle');
+            const mainContent = document.querySelector('.main-content');
+
+            sidebarToggle.addEventListener('click', function() {
+                sidebar.classList.toggle('sidebar-collapsed');
+                mainContent.classList.toggle('sidebar-collapsed');
+            });
+        });
+    </script>
     {% block extra_js %}{% endblock %}
 </body>
 </html>

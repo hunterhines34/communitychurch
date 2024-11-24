@@ -158,3 +158,87 @@ Request GET parameters: <QueryDict: {}>
 Prayer types filter: []
 Sort by: -created_at, Sort field: -created_at
 "GET / HTTP/1.1" 200 20852
+Watching for file changes with StatReloader
+Request GET parameters: <QueryDict: {}>
+Prayer types filter: []
+Sort by: -created_at, Sort field: -created_at
+"GET / HTTP/1.1" 200 20608
+"GET /static/css/custom.css HTTP/1.1" 200 4218
+"GET /request/18/ HTTP/1.1" 200 9378
+"GET /static/css/custom.css HTTP/1.1" 304 0
+Request GET parameters: <QueryDict: {}>
+Prayer types filter: []
+Sort by: -created_at, Sort field: -created_at
+"GET / HTTP/1.1" 200 20608
+Request GET parameters: <QueryDict: {}>
+Prayer types filter: []
+Sort by: -created_at, Sort field: -created_at
+"GET / HTTP/1.1" 200 20608
+"GET /static/css/custom.css HTTP/1.1" 200 5301
+Request GET parameters: <QueryDict: {}>
+Prayer types filter: []
+Sort by: -created_at, Sort field: -created_at
+"GET / HTTP/1.1" 200 20608
+"GET /static/css/custom.css HTTP/1.1" 304 0
+Request GET parameters: <QueryDict: {}>
+Prayer types filter: []
+Sort by: -created_at, Sort field: -created_at
+"GET / HTTP/1.1" 200 20608
+"GET /static/css/custom.css HTTP/1.1" 304 0
+"GET /prayer-request-types/ HTTP/1.1" 200 13253
+"GET /create/ HTTP/1.1" 200 8852
+"GET /static/css/custom.css HTTP/1.1" 304 0
+"GET /answered/ HTTP/1.1" 200 12276
+"GET /static/css/custom.css HTTP/1.1" 304 0
+"GET /report/ HTTP/1.1" 200 24789
+"GET /about/ HTTP/1.1" 200 7552
+"GET /static/css/custom.css HTTP/1.1" 304 0
+"GET /report/ HTTP/1.1" 200 24789
+"GET /static/css/custom.css HTTP/1.1" 304 0
+"GET /report/ HTTP/1.1" 200 24914
+"GET /static/css/custom.css HTTP/1.1" 304 0
+"GET /report/?date_range=30 HTTP/1.1" 200 24914
+"GET /report/?date_range=90 HTTP/1.1" 200 26763
+Request GET parameters: <QueryDict: {}>
+Prayer types filter: []
+Sort by: -created_at, Sort field: -created_at
+"GET / HTTP/1.1" 200 20733
+"GET /static/css/custom.css HTTP/1.1" 304 0
+Request GET parameters: <QueryDict: {}>
+Prayer types filter: []
+Sort by: -created_at, Sort field: -created_at
+"GET / HTTP/1.1" 200 20733
+"GET /static/css/custom.css HTTP/1.1" 200 5297
+Request GET parameters: <QueryDict: {}>
+Prayer types filter: []
+Sort by: -created_at, Sort field: -created_at
+"GET / HTTP/1.1" 200 20678
+"GET /static/css/custom.css HTTP/1.1" 200 7985
+Request GET parameters: <QueryDict: {}>
+Prayer types filter: []
+Sort by: -created_at, Sort field: -created_at
+"GET / HTTP/1.1" 200 20678
+"GET /static/css/custom.css HTTP/1.1" 304 0
+Request GET parameters: <QueryDict: {}>
+Prayer types filter: []
+Sort by: -created_at, Sort field: -created_at
+"GET / HTTP/1.1" 200 20678
+"GET /static/css/custom.css HTTP/1.1" 304 0
+Request GET parameters: <QueryDict: {}>
+Prayer types filter: []
+Sort by: -created_at, Sort field: -created_at
+"GET / HTTP/1.1" 200 20678
+"GET /static/css/custom.css HTTP/1.1" 304 0
+"GET /create/ HTTP/1.1" 200 8922
+"GET /static/css/custom.css HTTP/1.1" 304 0
+Request GET parameters: <QueryDict: {}>
+Prayer types filter: []
+Sort by: -created_at, Sort field: -created_at
+"GET / HTTP/1.1" 200 20678
+"GET /static/css/custom.css HTTP/1.1" 304 0
+"GET /about/ HTTP/1.1" 200 7622
+"GET /static/css/custom.css HTTP/1.1" 304 0
+Request GET parameters: <QueryDict: {}>
+Prayer types filter: []
+Sort by: -created_at, Sort field: -created_at
+"GET / HTTP/1.1" 200 20678

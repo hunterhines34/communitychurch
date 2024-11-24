@@ -1,11 +1,41 @@
 {% extends "base.html" %}
 
-{% block title %}Server Error (500){% endblock %}
+{% block title %}Server Error{% endblock %}
 
 {% block content %}
-<div class="container">
-    <h1>Server Error (500)</h1>
-    <p>Something went wrong on our end. We're working to fix it as soon as possible.</p>
-    <p>Please try again later or <a href="{% url 'home' %}">return to the homepage</a>.</p>
+<div class="container text-center py-5">
+    <div class="error-page">
+        <i class="fas fa-exclamation-triangle fa-4x mb-4 text-warning"></i>
+        <h1 class="display-4 mb-4">Server Error</h1>
+        <p class="lead text-muted mb-4">Something went wrong on our end. Our team has been notified and we're working to fix it.</p>
+        <div class="d-grid gap-3 d-sm-flex justify-content-sm-center">
+            <a href="{% url 'home' %}" class="btn btn-primary btn-lg">
+                <i class="fas fa-home me-2"></i>Return to Homepage
+            </a>
+            <button onclick="window.location.reload()" class="btn btn-outline-primary btn-lg">
+                <i class="fas fa-redo me-2"></i>Try Again
+            </button>
+        </div>
+    </div>
 </div>
+
+<style>
+    .error-page {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 2rem;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    .error-page i {
+        color: #f59e0b;
+    }
+    
+    .error-page .btn-lg {
+        padding: 1rem 2rem;
+        font-size: 1.1rem;
+    }
+</style>
 {% endblock %}
