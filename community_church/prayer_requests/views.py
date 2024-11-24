@@ -8,46 +8,104 @@ from django.http import HttpResponseForbidden
 import logging
 from django.utils.timezone import make_aware
 from datetime import datetime
-from django.contrib import messages
 from django.db.models import Count
 from itertools import groupby
 from django.db.models.functions import TruncDate
+from django.db.models import Q
+from django.contrib import messages
+import traceback
 
 # Logging 
 logger = logging.getLogger(__name__)
 
 # Home view to list all prayer requests
+@login_required
 def home(request):
-    if request.user.is_authenticated:
-        prayer_types = PrayerRequest.PRAYER_TYPES
-        #requests = PrayerRequest.objects.all()
-        requests = PrayerRequest.objects.filter(is_answered=False)
+    try:
+        print(f"User authenticated: {request.user.is_authenticated}")
+        print(f"User: {request.user}")
+        
+        if request.user.is_authenticated:
+            prayer_types = PrayerRequest.PRAYER_TYPES
+            requests = PrayerRequest.objects.filter(is_answered=False)
 
-        # Filter by date range
-        start_date = request.GET.get('start_date')
-        end_date = request.GET.get('end_date')
-        if start_date and end_date:
-            start_date = make_aware(datetime.strptime(start_date, '%Y-%m-%d'))
-            end_date = make_aware(datetime.strptime(end_date, '%Y-%m-%d'))
-            requests = requests.filter(created_at__range=[start_date, end_date])
+            # Detailed logging of request parameters
+            logger.error(f"Request GET parameters: {request.GET}")
 
-        # Filter by prayer type
-        prayer_type = request.GET.get('prayer_type')
-        if prayer_type:
-            requests = requests.filter(prayer_type=prayer_type)
+            # Search by keyword
+            search_query = request.GET.get('search', '').strip()
+            if search_query:
+                requests = requests.filter(
+                    Q(title__icontains=search_query) | 
+                    Q(description__icontains=search_query)
+                )
 
-        requests = requests.annotate(date=TruncDate('created_at')).order_by('-date', '-created_at')
-        grouped_requests = {
-            date: list(group) for date, group in groupby(requests, key=lambda x: x.date)
-        }
+            # Filter by date range
+            start_date_str = request.GET.get('start_date', '')
+            end_date_str = request.GET.get('end_date', '')
+            start_date = None
+            end_date = None
 
-        context = {
-            'grouped_requests': grouped_requests,
-            'prayer_types': prayer_types,
-        }
-        return render(request, 'prayer_requests/home.html', context)
-    else:
-        return render(request, 'prayer_requests/home.html')
+            if start_date_str and end_date_str:
+                try:
+                    start_date = make_aware(datetime.strptime(start_date_str, '%Y-%m-%d'))
+                    end_date = make_aware(datetime.strptime(end_date_str, '%Y-%m-%d'))
+                    # Extend end_date to include the entire day
+                    end_date = end_date.replace(hour=23, minute=59, second=59, microsecond=999999)
+                    requests = requests.filter(created_at__range=[start_date, end_date])
+                except Exception as date_error:
+                    logger.error(f"Date parsing error: {date_error}")
+                    logger.error(f"Start date: {start_date_str}, End date: {end_date_str}")
+                    messages.error(request, f"Invalid date format: {date_error}")
+
+            # Multi-select prayer type filtering
+            prayer_types_filter = request.GET.getlist('prayer_types')
+            logger.error(f"Prayer types filter: {prayer_types_filter}")
+            if prayer_types_filter:
+                requests = requests.filter(prayer_type__in=prayer_types_filter)
+
+            # Sorting options
+            sort_by = request.GET.get('sort_by', '-created_at')
+            sort_options = {
+                'recent': '-created_at',
+                'most_commented': '-comments_count',
+                'most_viewed': '-views_count'
+            }
+            sort_field = sort_options.get(sort_by, '-created_at')
+            logger.error(f"Sort by: {sort_by}, Sort field: {sort_field}")
+
+            # Annotate with comments count
+            requests = requests.annotate(
+                comments_count=Count('comments', distinct=True)
+            )
+
+            # Order the requests
+            requests = requests.order_by(sort_field)
+
+            # Group by date for display
+            requests = requests.annotate(date=TruncDate('created_at'))
+            grouped_requests = {
+                date: list(group) for date, group in groupby(requests, key=lambda x: x.date)
+            }
+
+            context = {
+                'grouped_requests': grouped_requests,
+                'prayer_types': prayer_types,
+                'current_search': search_query,
+                'current_prayer_types': prayer_types_filter,
+                'current_sort': sort_by,
+                'start_date': start_date_str,
+                'end_date': end_date_str,
+            }
+            return render(request, 'prayer_requests/home.html', context)
+        else:
+            return render(request, 'prayer_requests/home.html')
+    except Exception as e:
+        # Log the full stack trace
+        logger.error(f"Unexpected error in home view: {e}")
+        logger.error(traceback.format_exc())
+        # Re-raise the exception to see the full error
+        raise
 
 # Detail view for a specific prayer request
 def prayer_request_detail(request, pk):
