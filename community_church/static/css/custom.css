@@ -1,0 +1,87 @@
+:root {
+    --primary-color: #4a6cf7;
+    --secondary-color: #6c757d;
+    --light-color: #f8f9fa;
+    --dark-color: #343a40;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background-color: #f4f7fa;
+}
+
+main {
+    flex: 1 0 auto;
+}
+
+.navbar {
+    background: linear-gradient(135deg, var(--primary-color), #6a11cb);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.navbar-brand {
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    color: var(--light-color) !important;
+}
+
+.nav-link {
+    transition: all 0.3s ease;
+    color: rgba(255,255,255,0.8) !important;
+}
+
+.nav-link:hover {
+    transform: translateY(-2px);
+    color: var(--light-color) !important;
+}
+
+.dropdown-menu {
+    border: none;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    background-color: var(--light-color);
+}
+
+.dropdown-item {
+    transition: background-color 0.3s ease;
+}
+
+.dropdown-item:hover {
+    background-color: rgba(74, 108, 247, 0.1);
+}
+
+.footer {
+    background-color: var(--light-color);
+    border-top: 1px solid #e9ecef;
+}
+
+.footer a {
+    color: var(--dark-color);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.footer a:hover {
+    color: var(--primary-color);
+}
+
+.social-links a {
+    transition: color 0.3s ease;
+}
+
+.social-links a:hover {
+    color: var(--primary-color) !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .navbar-nav {
+        text-align: center;
+    }
+    
+    .dropdown-menu {
+        text-align: center;
+    }
+}

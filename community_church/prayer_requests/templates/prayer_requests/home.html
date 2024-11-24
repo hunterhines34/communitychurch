@@ -3,98 +3,154 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css">
+<style>
+    .card-prayer {
+        transition: all 0.3s ease;
+        border-left: 4px solid var(--primary-color);
+    }
+    .card-prayer:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+    .filter-section {
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    .prayer-stats {
+        background-color: #f1f3ff;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+</style>
 {% endblock %}
 
 {% block content %}
-<div class="container mt-4">
+<div class="container-fluid">
     {% if user.is_authenticated %}
-    <div class="row mb-4">
-        <div class="col-12">
-            <form id="prayer-request-filter" method="get" class="row g-3 align-items-end">
-                <!-- Search Input -->
-                <div class="col-md-4 mb-3">
-                    <label for="search" class="form-label">Search Prayer Requests</label>
-                    <input type="text" class="form-control" id="search" name="search" 
-                           placeholder="Search by title or description" 
-                           value="{{ current_search }}">
-                </div>
-
-                <!-- Date Range Picker -->
-                <div class="col-md-4 mb-3">
-                    <label class="form-label">Date Range</label>
-                    <div class="input-group">
-                        <input type="date" class="form-control" name="start_date" 
-                               id="start_date" value="{{ start_date|default_if_none:'' }}">
-                        <span class="input-group-text">to</span>
-                        <input type="date" class="form-control" name="end_date" 
-                               id="end_date" value="{{ end_date|default_if_none:'' }}">
+    <div class="row">
+        <div class="col-lg-3 d-none d-lg-block">
+            <div class="prayer-stats mb-4">
+                <h5 class="mb-3"><i class="fas fa-chart-pie me-2"></i>Prayer Dashboard</h5>
+                <div class="row">
+                    <div class="col-6 mb-2">
+                        <small class="text-muted">Total Requests</small>
+                        <h4 class="mb-0">{{ total_requests }}</h4>
+                    </div>
+                    <div class="col-6 mb-2">
+                        <small class="text-muted">Answered Prayers</small>
+                        <h4 class="mb-0">{{ answered_requests }}</h4>
+                    </div>
+                    <div class="col-6 mb-2">
+                        <small class="text-muted">Pending</small>
+                        <h4 class="mb-0">{{ pending_requests }}</h4>
+                    </div>
+                    <div class="col-6 mb-2">
+                        <small class="text-muted">Your Requests</small>
+                        <h4 class="mb-0">{{ user_requests }}</h4>
                     </div>
                 </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-9">
+            <div class="filter-section">
+                <form id="prayer-request-filter" method="get" class="row g-3 align-items-end">
+                    <div class="col-md-4 mb-3">
+                        <label for="search" class="form-label">Search Prayer Requests</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-search"></i></span>
+                            <input type="text" class="form-control" id="search" name="search" 
+                                   placeholder="Search by title or description" 
+                                   value="{{ current_search }}">
+                        </div>
+                    </div>
 
-                <!-- Prayer Type Multi-Select -->
-                <div class="col-md-4 mb-3">
-                    <label for="prayer_types" class="form-label">Prayer Types</label>
-                    <select multiple class="form-control" id="prayer_types" name="prayer_types">
-                        {% for type_value, type_label in prayer_types %}
-                            <option value="{{ type_value }}" 
-                                    {% if type_value in current_prayer_types %}selected{% endif %}>
-                                {{ type_label }}
-                            </option>
-                        {% endfor %}
-                    </select>
-                </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Date Range</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-calendar"></i></span>
+                            <input type="date" class="form-control" name="start_date" 
+                                   id="start_date" value="{{ start_date|default_if_none:'' }}">
+                            <span class="input-group-text">to</span>
+                            <input type="date" class="form-control" name="end_date" 
+                                   id="end_date" value="{{ end_date|default_if_none:'' }}">
+                        </div>
+                    </div>
 
-                <!-- Sorting Dropdown -->
-                <div class="col-md-4 mb-3">
-                    <label for="sort_by" class="form-label">Sort By</label>
-                    <select class="form-select" id="sort_by" name="sort_by">
-                        <option value="recent" {% if current_sort == 'recent' %}selected{% endif %}>Most Recent</option>
-                        <option value="most_commented" {% if current_sort == 'most_commented' %}selected{% endif %}>Most Commented</option>
-                    </select>
-                </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="prayer_types" class="form-label">Prayer Types</label>
+                        <select multiple class="form-control" id="prayer_types" name="prayer_types">
+                            {% for type_value, type_label in prayer_types %}
+                                <option value="{{ type_value }}" 
+                                        {% if type_value in current_prayer_types %}selected{% endif %}>
+                                    {{ type_label }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
 
-                <!-- Filter Buttons -->
-                <div class="col-md-8 mb-3 d-flex align-items-end">
-                    <button type="submit" class="btn btn-primary me-2">Apply Filters</button>
-                    <button type="button" id="reset-filters" class="btn btn-secondary">Reset Filters</button>
+                    <div class="col-md-4 mb-3">
+                        <label for="sort_by" class="form-label">Sort By</label>
+                        <select class="form-select" id="sort_by" name="sort_by">
+                            <option value="recent" {% if current_sort == 'recent' %}selected{% endif %}>Most Recent</option>
+                            <option value="most_commented" {% if current_sort == 'most_commented' %}selected{% endif %}>Most Commented</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-8 mb-3 d-flex align-items-end">
+                        <button type="submit" class="btn btn-primary me-2"><i class="fas fa-filter me-2"></i>Apply Filters</button>
+                        <button type="button" id="reset-filters" class="btn btn-secondary"><i class="fas fa-redo me-2"></i>Reset</button>
+                    </div>
+                </form>
+            </div>
+
+            {% if grouped_requests %}
+                {% for date, requests_on_date in grouped_requests.items %}
+                    <div class="card mb-4 border-0 shadow-sm">
+                        <div class="card-header bg-light">
+                            <h5 class="mb-0 text-muted"><i class="fas fa-calendar-alt me-2"></i>{{ date|date:"F d, Y" }}</h5>
+                        </div>
+                        <div class="card-body p-0">
+                            {% for request in requests_on_date %}
+                                <div class="card card-prayer mb-3 border-0 border-start">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-start">
+                                            <div>
+                                                <h5 class="card-title mb-2">{{ request.title }}</h5>
+                                                <h6 class="card-subtitle mb-2 text-muted">
+                                                    <i class="fas fa-tag me-1"></i>{{ request.prayer_type }}
+                                                </h6>
+                                            </div>
+                                            <span class="badge bg-light text-muted">
+                                                <i class="fas fa-clock me-1"></i>{{ request.created_at|timesince }} ago
+                                            </span>
+                                        </div>
+                                        <p class="card-text text-muted">{{ request.description|truncatechars:200 }}</p>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <a href="{% url 'prayer_request_detail' request.pk %}" class="btn btn-sm btn-outline-primary">
+                                                <i class="fas fa-eye me-1"></i>View Details
+                                            </a>
+                                            <small class="text-muted">
+                                                <i class="fas fa-comment me-1"></i>{{ request.comments_count }} Comments
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="alert alert-info text-center" role="alert">
+                    <i class="fas fa-info-circle me-2"></i>No prayer requests found. Try adjusting your filters.
                 </div>
-            </form>
+            {% endif %}
         </div>
     </div>
-
-    <!-- Prayer Requests Display -->
-    {% if grouped_requests %}
-        {% for date, requests_on_date in grouped_requests.items %}
-            <div class="card mb-4">
-                <div class="card-header">
-                    <h5 class="mb-0">{{ date|date:"F d, Y" }}</h5>
-                </div>
-                <div class="card-body">
-                    {% for request in requests_on_date %}
-                        <div class="card mb-3">
-                            <div class="card-body">
-                                <h5 class="card-title">{{ request.title }}</h5>
-                                <h6 class="card-subtitle mb-2 text-muted">
-                                    {{ request.prayer_type }}
-                                </h6>
-                                <p class="card-text">{{ request.description|truncatechars:200 }}</p>
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <a href="{% url 'prayer_request_detail' request.pk %}" class="btn btn-sm btn-outline-primary">View Details</a>
-                                    <small class="text-muted">
-                                        Created {{ request.created_at|timesince }} ago
-                                    </small>
-                                </div>
-                            </div>
-                        </div>
-                    {% endfor %}
-                </div>
-            </div>
-        {% endfor %}
-    {% else %}
-        <div class="alert alert-info text-center" role="alert">
-            No prayer requests found. Try adjusting your filters.
-        </div>
-    {% endif %}
     {% endif %}
 </div>
 {% endblock %}

@@ -129,3 +129,32 @@ Sort by: -created_at, Sort field: -created_at
 "GET /request/18/ HTTP/1.1" 200 13876
 "POST /comment/3/delete/ HTTP/1.1" 302 0
 "GET /request/18/ HTTP/1.1" 200 9883
+Request GET parameters: <QueryDict: {}>
+Prayer types filter: []
+Sort by: -created_at, Sort field: -created_at
+"GET / HTTP/1.1" 200 16082
+Request GET parameters: <QueryDict: {}>
+Prayer types filter: []
+Sort by: -created_at, Sort field: -created_at
+"GET / HTTP/1.1" 200 20852
+"GET /static/css/custom.css HTTP/1.1" 200 1618
+"GET /request/18/ HTTP/1.1" 200 9622
+"GET /static/css/custom.css HTTP/1.1" 304 0
+Request GET parameters: <QueryDict: {}>
+Prayer types filter: []
+Sort by: -created_at, Sort field: -created_at
+"GET / HTTP/1.1" 200 20852
+Request GET parameters: <QueryDict: {}>
+Prayer types filter: []
+Sort by: -created_at, Sort field: -created_at
+"GET / HTTP/1.1" 200 20852
+Request GET parameters: <QueryDict: {'search': [''], 'start_date': [''], 'end_date': [''], 'sort_by': ['most_commented']}>
+Prayer types filter: []
+Sort by: most_commented, Sort field: -comments_count
+"GET /?search=&start_date=&end_date=&sort_by=most_commented HTTP/1.1" 200 20860
+"GET /static/css/custom.css HTTP/1.1" 304 0
+"GET /request/17/ HTTP/1.1" 200 13597
+Request GET parameters: <QueryDict: {}>
+Prayer types filter: []
+Sort by: -created_at, Sort field: -created_at
+"GET / HTTP/1.1" 200 20852

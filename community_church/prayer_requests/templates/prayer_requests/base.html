@@ -7,33 +7,18 @@
     {% load static %}
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Custom CSS 
-    <link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}"> -->
+    <!-- Custom CSS -->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/custom.css' %}">
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
-    <!-- ApexCharts -->
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     {% block extra_css %}{% endblock %}
-    <style>
-        body {
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
-        main {
-            flex: 1 0 auto;
-        }
-        .footer {
-            flex-shrink: 0;
-        }
-    </style>
 </head>
 <body class="d-flex flex-column h-100">
     <header>
-        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-            <div class="container">
+        <nav class="navbar navbar-expand-lg navbar-dark">
+            <div class="container-fluid">
                 <a class="navbar-brand" href="{% url 'home' %}">
-                    <i class="fas fa-pray me-2"></i>Community Prayer Requests
+                    <i class="fas fa-pray me-2"></i>Community Prayer
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -50,28 +35,24 @@
                             <li class="nav-item">
                                 <a class="nav-link" href="{% url 'create_prayer_request' %}"><i class="fas fa-plus" aria-hidden="true"></i> <span class="ms-1">New Prayer Request</span></a>
                             </li>
-                        {% endif %}
-                        {% if user.is_authenticated %}
                             <li class="nav-item">
                                 <a class="nav-link" href="{% url 'answered_prayers' %}"><i class="fas fa-check" aria-hidden="true"></i> <span class="ms-1">Answered Prayers</span></a>
                             </li>
-                        {% endif %}
-                        {% if user.is_authenticated %}
                             <li class="nav-item">
-                                <a class="nav-link" href="{% url 'prayer_request_report' %}"><i class="fas fa-chart-bar" aria-hidden="true"></i> <span class="ms-1"></span>Prayer Reports</a>
+                                <a class="nav-link" href="{% url 'prayer_request_report' %}"><i class="fas fa-chart-bar" aria-hidden="true"></i> <span class="ms-1">Prayer Reports</span></a>
                             </li>
                         {% endif %}
-                        <li class="nav-item"></li>
+                        <li class="nav-item">
                             <a class="nav-link" href="{% url 'about' %}"><i class="fas fa-info-circle" aria-hidden="true"></i> <span class="ms-1">About Us</span></a>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Account <i class="fas fa-user-circle"></i>
+                                <i class="fas fa-user-circle"></i> <span class="ms-1">Account</span>
                             </a>
-                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                            <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="navbarDropdown">
                                 {% if user.is_authenticated %}
                                     {% if user.is_superuser %}
-                                        <li><a class="dropdown-item" href="{% url 'admin:index' %}"><i class="fas fa-cog"></i> Admin</a></li>
+                                        <li><a class="dropdown-item" href="{% url 'admin:index' %}"><i class="fas fa-cog"></i> Admin Dashboard</a></li>
                                         <li><hr class="dropdown-divider"></li>
                                     {% endif %}
                                     <li><a class="dropdown-item" href="{% url 'profile' %}"><i class="fas fa-user"></i> Profile</a></li>
@@ -94,56 +75,53 @@
         </nav>
     </header>
 
-    <main class="container-fluid py-4 flex-grow-1">
-        <div class="container mt-4">
+    <main class="flex-shrink-0">
+        <div class="container-fluid px-4 py-4">
             {% block content %}
             {% endblock %}
         </div>
     </main>
 
-    <footer class="footer mt-auto py-3 bg-light">
+    <footer class="footer mt-auto py-5">
         <div class="container">
             <div class="row">
-                <div class="col-md-4">
-                    <h5>Community Prayer Requests</h5>
-                    <p>Uniting people through the power of prayer.</p>
+                <div class="col-md-4 mb-4">
+                    <h5 class="text-dark mb-3">Community Prayer</h5>
+                    <p class="text-muted">Uniting people through the power of prayer and community support.</p>
                 </div>
-                <div class="col-md-4">
-                    <h5>Quick Links</h5>
+                <div class="col-md-4 mb-4">
+                    <h5 class="text-dark mb-3">Quick Links</h5>
                     <ul class="list-unstyled">
-                        <li><a href="{% url 'home' %}">Home</a></li>
-                        <li><a href="{% url 'about' %}">About</a></li>
+                        <li class="mb-2"><a href="{% url 'home' %}" class="text-muted">Home</a></li>
+                        <li class="mb-2"><a href="{% url 'about' %}" class="text-muted">About</a></li>
                         {% if user.is_authenticated %}
-                            <li><a href="{% url 'create_prayer_request' %}">Create Prayer Request</a></li>
-                            <li><a href="{% url 'prayer_request_types' %}">Request Types</a></li>
-                            <li><a href="{% url 'answered_prayers' %}">Answered Prayers</a></li>
-                            <li><a href="{% url 'prayer_request_report' %}">Prayer Reports</a></li>
+                            <li class="mb-2"><a href="{% url 'create_prayer_request' %}" class="text-muted">Create Prayer Request</a></li>
+                            <li class="mb-2"><a href="{% url 'answered_prayers' %}" class="text-muted">Answered Prayers</a></li>
                         {% else %}
-                            <li><a href="{% url 'login' %}">Login</a></li>
-                            <li><a href="{% url 'signup' %}">Sign Up</a></li>
+                            <li class="mb-2"><a href="{% url 'login' %}" class="text-muted">Login</a></li>
+                            <li class="mb-2"><a href="{% url 'signup' %}" class="text-muted">Sign Up</a></li>
                         {% endif %}
                     </ul>
                 </div>
-                <div class="col-md-4">
-                    <h5>Connect With Us</h5>
-                    <ul class="list-unstyled">
-                        <li><a href="#"><i class="fab fa-facebook"></i> Facebook</a></li>
-                        <li><a href="#"><i class="fab fa-twitter"></i> Twitter</a></li>
-                        <li><a href="#"><i class="fab fa-instagram"></i> Instagram</a></li>
-                    </ul>
+                <div class="col-md-4 mb-4">
+                    <h5 class="text-dark mb-3">Connect With Us</h5>
+                    <div class="social-links">
+                        <a href="#" class="text-muted me-3"><i class="fab fa-facebook-f fa-lg"></i></a>
+                        <a href="#" class="text-muted me-3"><i class="fab fa-twitter fa-lg"></i></a>
+                        <a href="#" class="text-muted me-3"><i class="fab fa-instagram fa-lg"></i></a>
+                        <a href="#" class="text-muted"><i class="fab fa-linkedin-in fa-lg"></i></a>
+                    </div>
                 </div>
             </div>
-            <hr>
-            <div class="text-center">
-                <p>&copy; 2024 Community Prayer Requests. All rights reserved.</p>
+            <hr class="my-4">
+            <div class="text-center text-muted">
+                <p class="mb-0">&copy; 2024 Community Prayer. All rights reserved.</p>
             </div>
         </div>
     </footer>
 
-    <!-- Bootstrap and jQuery Scripts -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Bootstrap JS Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    
     {% block extra_js %}{% endblock %}
 </body>
 </html>
