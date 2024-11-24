@@ -80,6 +80,17 @@ main {
     font-size: 0.9rem;
 }
 
+/* Navbar Background Class */
+.navbar-bg {
+    background: var(--footer-bg) !important;
+    color: white !important;
+}
+
+.navbar-bg:hover {
+    background: rgba(255,255,255,0.1);
+    transform: translateY(-1px);
+}
+
 /* Card Styles */
 .card {
     border: none;
