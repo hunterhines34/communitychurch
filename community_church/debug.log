@@ -242,3 +242,341 @@ Request GET parameters: <QueryDict: {}>
 Prayer types filter: []
 Sort by: -created_at, Sort field: -created_at
 "GET / HTTP/1.1" 200 20678
+Watching for file changes with StatReloader
+Request GET parameters: <QueryDict: {}>
+Prayer types filter: []
+Sort by: -created_at, Sort field: -created_at
+"GET / HTTP/1.1" 200 20647
+"GET /static/css/custom.css HTTP/1.1" 200 8309
+Request GET parameters: <QueryDict: {}>
+Prayer types filter: []
+Sort by: -created_at, Sort field: -created_at
+"GET / HTTP/1.1" 200 20647
+"GET /static/css/custom.css HTTP/1.1" 304 0
+Request GET parameters: <QueryDict: {}>
+Prayer types filter: []
+Sort by: -created_at, Sort field: -created_at
+"GET / HTTP/1.1" 200 20647
+"GET /static/css/custom.css HTTP/1.1" 304 0
+Request GET parameters: <QueryDict: {}>
+Prayer types filter: []
+Sort by: -created_at, Sort field: -created_at
+"GET / HTTP/1.1" 200 20647
+Request GET parameters: <QueryDict: {}>
+Prayer types filter: []
+Sort by: -created_at, Sort field: -created_at
+"GET / HTTP/1.1" 200 20647
+"GET /static/css/custom.css HTTP/1.1" 304 0
+"GET / HTTP/1.1" 302 0
+"GET /login/?next=/ HTTP/1.1" 200 7707
+"GET /static/css/custom.css HTTP/1.1" 200 8309
+"POST /login/?next=/ HTTP/1.1" 302 0
+Request GET parameters: <QueryDict: {}>
+Prayer types filter: []
+Sort by: -created_at, Sort field: -created_at
+"GET / HTTP/1.1" 200 20647
+Request GET parameters: <QueryDict: {}>
+Prayer types filter: []
+Sort by: -created_at, Sort field: -created_at
+"GET / HTTP/1.1" 200 20009
+"GET /static/css/custom.css HTTP/1.1" 200 7860
+"GET /admin/ HTTP/1.1" 200 10645
+"GET /static/admin/css/base.css HTTP/1.1" 200 22092
+"GET /static/admin/css/dark_mode.css HTTP/1.1" 200 2804
+"GET /static/admin/css/dashboard.css HTTP/1.1" 200 441
+"GET /static/admin/css/nav_sidebar.css HTTP/1.1" 200 2810
+"GET /static/admin/js/theme.js HTTP/1.1" 200 1653
+"GET /static/admin/css/responsive.css HTTP/1.1" 200 17972
+"GET /static/admin/js/nav_sidebar.js HTTP/1.1" 200 3063
+"GET /static/admin/img/icon-addlink.svg HTTP/1.1" 200 331
+"GET /static/admin/img/icon-changelink.svg HTTP/1.1" 200 380
+Request GET parameters: <QueryDict: {}>
+Prayer types filter: []
+Sort by: -created_at, Sort field: -created_at
+"GET / HTTP/1.1" 200 20018
+"GET /static/css/custom.css HTTP/1.1" 304 0
+Request GET parameters: <QueryDict: {}>
+Prayer types filter: []
+Sort by: -created_at, Sort field: -created_at
+"GET / HTTP/1.1" 200 20008
+"GET /static/css/custom.css HTTP/1.1" 304 0
+Request GET parameters: <QueryDict: {}>
+Prayer types filter: []
+Sort by: -created_at, Sort field: -created_at
+"GET / HTTP/1.1" 200 20019
+"GET /static/css/custom.css HTTP/1.1" 200 8096
+"GET /profile/ HTTP/1.1" 200 19420
+"GET /static/css/custom.css HTTP/1.1" 304 0
+"GET /prayer-request-types/ HTTP/1.1" 200 12664
+"GET /static/css/custom.css HTTP/1.1" 304 0
+"GET /create/ HTTP/1.1" 200 8263
+"GET /answered/ HTTP/1.1" 200 11687
+"GET /report/ HTTP/1.1" 200 24200
+"GET /static/css/custom.css HTTP/1.1" 304 0
+"GET /report/ HTTP/1.1" 200 24200
+"GET /static/css/custom.css HTTP/1.1" 200 8730
+"GET /create/ HTTP/1.1" 200 8263
+"GET /static/css/custom.css HTTP/1.1" 304 0
+Request GET parameters: <QueryDict: {}>
+Prayer types filter: []
+Sort by: -created_at, Sort field: -created_at
+"GET / HTTP/1.1" 200 20019
+"GET /static/css/custom.css HTTP/1.1" 304 0
+Request GET parameters: <QueryDict: {}>
+Prayer types filter: []
+Sort by: -created_at, Sort field: -created_at
+"GET / HTTP/1.1" 200 20019
+"GET /static/css/custom.css HTTP/1.1" 200 8788
+Request GET parameters: <QueryDict: {}>
+Prayer types filter: []
+Sort by: -created_at, Sort field: -created_at
+"GET / HTTP/1.1" 200 20019
+"GET /static/css/custom.css HTTP/1.1" 200 8992
+"GET /prayer-request-types/ HTTP/1.1" 200 12664
+"GET /static/css/custom.css HTTP/1.1" 304 0
+"GET /create/ HTTP/1.1" 200 8263
+"GET /static/css/custom.css HTTP/1.1" 304 0
+"GET /answered/ HTTP/1.1" 200 11687
+"GET /static/css/custom.css HTTP/1.1" 304 0
+"GET /request/16/ HTTP/1.1" 200 8771
+"GET /static/css/custom.css HTTP/1.1" 304 0
+Request GET parameters: <QueryDict: {}>
+Prayer types filter: []
+Sort by: -created_at, Sort field: -created_at
+"GET / HTTP/1.1" 200 20019
+"GET /static/css/custom.css HTTP/1.1" 304 0
+"GET /report/ HTTP/1.1" 200 24200
+"GET /report/ HTTP/1.1" 200 24200
+"GET /static/css/custom.css HTTP/1.1" 200 8999
+"GET /create/ HTTP/1.1" 200 8263
+"GET /static/css/custom.css HTTP/1.1" 304 0
+"GET /answered/ HTTP/1.1" 200 11687
+"GET /static/css/custom.css HTTP/1.1" 304 0
+"GET /report/ HTTP/1.1" 200 24200
+Request GET parameters: <QueryDict: {}>
+Prayer types filter: []
+Sort by: -created_at, Sort field: -created_at
+"GET / HTTP/1.1" 200 20019
+"GET /static/css/custom.css HTTP/1.1" 304 0
+"GET /about/ HTTP/1.1" 200 6963
+"GET /static/css/custom.css HTTP/1.1" 304 0
+Internal Server Error: /about/
+Traceback (most recent call last):
+  File "/home/hunter/Dev/Python/community_church/.venv/lib/python3.10/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/hunter/Dev/Python/community_church/.venv/lib/python3.10/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/hunter/Dev/Python/community_church/community_church/prayer_requests/views.py", line 245, in about
+    return render(request, 'prayer_requests/about.html')
+  File "/home/hunter/Dev/Python/community_church/.venv/lib/python3.10/site-packages/django/shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "/home/hunter/Dev/Python/community_church/.venv/lib/python3.10/site-packages/django/template/loader.py", line 62, in render_to_string
+    return template.render(context, request)
+  File "/home/hunter/Dev/Python/community_church/.venv/lib/python3.10/site-packages/django/template/backends/django.py", line 107, in render
+    return self.template.render(context)
+  File "/home/hunter/Dev/Python/community_church/.venv/lib/python3.10/site-packages/django/template/base.py", line 171, in render
+    return self._render(context)
+  File "/home/hunter/Dev/Python/community_church/.venv/lib/python3.10/site-packages/django/template/base.py", line 163, in _render
+    return self.nodelist.render(context)
+  File "/home/hunter/Dev/Python/community_church/.venv/lib/python3.10/site-packages/django/template/base.py", line 1008, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "/home/hunter/Dev/Python/community_church/.venv/lib/python3.10/site-packages/django/template/base.py", line 1008, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "/home/hunter/Dev/Python/community_church/.venv/lib/python3.10/site-packages/django/template/base.py", line 969, in render_annotated
+    return self.render(context)
+  File "/home/hunter/Dev/Python/community_church/.venv/lib/python3.10/site-packages/django/template/loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+  File "/home/hunter/Dev/Python/community_church/.venv/lib/python3.10/site-packages/django/template/base.py", line 163, in _render
+    return self.nodelist.render(context)
+  File "/home/hunter/Dev/Python/community_church/.venv/lib/python3.10/site-packages/django/template/base.py", line 1008, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "/home/hunter/Dev/Python/community_church/.venv/lib/python3.10/site-packages/django/template/base.py", line 1008, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "/home/hunter/Dev/Python/community_church/.venv/lib/python3.10/site-packages/django/template/base.py", line 969, in render_annotated
+    return self.render(context)
+  File "/home/hunter/Dev/Python/community_church/.venv/lib/python3.10/site-packages/django/template/loader_tags.py", line 65, in render
+    result = block.nodelist.render(context)
+  File "/home/hunter/Dev/Python/community_church/.venv/lib/python3.10/site-packages/django/template/base.py", line 1008, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "/home/hunter/Dev/Python/community_church/.venv/lib/python3.10/site-packages/django/template/base.py", line 1008, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "/home/hunter/Dev/Python/community_church/.venv/lib/python3.10/site-packages/django/template/base.py", line 969, in render_annotated
+    return self.render(context)
+  File "/home/hunter/Dev/Python/community_church/.venv/lib/python3.10/site-packages/django/template/defaulttags.py", line 480, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+  File "/home/hunter/Dev/Python/community_church/.venv/lib/python3.10/site-packages/django/urls/base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+  File "/home/hunter/Dev/Python/community_church/.venv/lib/python3.10/site-packages/django/urls/resolvers.py", line 831, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'prayer_list' not found. 'prayer_list' is not a valid view function or pattern name.
+"GET /about/ HTTP/1.1" 500 166880
+"GET /about/ HTTP/1.1" 200 12144
+"GET /static/css/custom.css HTTP/1.1" 304 0
+"GET /create/ HTTP/1.1" 200 8263
+"GET /create/ HTTP/1.1" 200 8263
+Request GET parameters: <QueryDict: {}>
+Prayer types filter: []
+Sort by: -created_at, Sort field: -created_at
+"GET / HTTP/1.1" 200 20019
+Request GET parameters: <QueryDict: {}>
+Prayer types filter: []
+Sort by: -created_at, Sort field: -created_at
+"GET / HTTP/1.1" 200 20019
+"GET /static/css/custom.css HTTP/1.1" 304 0
+"GET /about/ HTTP/1.1" 200 12137
+"GET /static/css/custom.css HTTP/1.1" 304 0
+Request GET parameters: <QueryDict: {}>
+Prayer types filter: []
+Sort by: -created_at, Sort field: -created_at
+"GET / HTTP/1.1" 200 20019
+"GET /about/ HTTP/1.1" 200 12137
+"GET /about/ HTTP/1.1" 200 11257
+"GET /static/css/custom.css HTTP/1.1" 200 9964
+"GET /about/ HTTP/1.1" 200 12294
+"GET /static/css/custom.css HTTP/1.1" 200 10094
+"GET /answered/ HTTP/1.1" 200 12724
+"GET /static/css/custom.css HTTP/1.1" 304 0
+"GET /report/ HTTP/1.1" 200 25237
+"GET /static/css/custom.css HTTP/1.1" 304 0
+Request GET parameters: <QueryDict: {}>
+Prayer types filter: []
+Sort by: -created_at, Sort field: -created_at
+"GET / HTTP/1.1" 200 21056
+"GET /static/css/custom.css HTTP/1.1" 304 0
+"GET /answered/ HTTP/1.1" 200 12724
+"GET /static/css/custom.css HTTP/1.1" 304 0
+"GET /report/ HTTP/1.1" 200 25237
+"GET /about/ HTTP/1.1" 200 12294
+"GET /prayer-request-types/ HTTP/1.1" 200 13701
+"GET /static/css/custom.css HTTP/1.1" 304 0
+"GET /prayer-request-types/ HTTP/1.1" 200 14213
+"GET /static/css/custom.css HTTP/1.1" 304 0
+Request GET parameters: <QueryDict: {}>
+Prayer types filter: []
+Sort by: -created_at, Sort field: -created_at
+"GET / HTTP/1.1" 200 21568
+"GET /static/css/custom.css HTTP/1.1" 304 0
+"GET /about/ HTTP/1.1" 200 12806
+"GET /about/ HTTP/1.1" 200 12840
+"GET /static/css/custom.css HTTP/1.1" 200 10279
+"GET /about/ HTTP/1.1" 200 13358
+"GET /static/css/custom.css HTTP/1.1" 200 10362
+"GET /prayer-request-types/ HTTP/1.1" 200 14765
+"GET /static/css/custom.css HTTP/1.1" 304 0
+"GET /create/ HTTP/1.1" 200 10364
+"GET /static/css/custom.css HTTP/1.1" 304 0
+"GET /about/ HTTP/1.1" 200 13358
+"GET /static/css/custom.css HTTP/1.1" 304 0
+"GET /report/ HTTP/1.1" 200 26301
+"GET /static/css/custom.css HTTP/1.1" 304 0
+Request GET parameters: <QueryDict: {}>
+Prayer types filter: []
+Sort by: -created_at, Sort field: -created_at
+"GET / HTTP/1.1" 200 22120
+"GET /static/css/custom.css HTTP/1.1" 304 0
+"GET /prayer-request-types/ HTTP/1.1" 200 14765
+Internal Server Error: /prayer-request-types/
+Traceback (most recent call last):
+  File "/home/hunter/Dev/Python/community_church/.venv/lib/python3.10/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/hunter/Dev/Python/community_church/.venv/lib/python3.10/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/hunter/Dev/Python/community_church/community_church/prayer_requests/views.py", line 327, in prayer_request_types
+    return render(request, 'prayer_requests/prayer_request_types.html', {'prayer_types': prayer_types})
+  File "/home/hunter/Dev/Python/community_church/.venv/lib/python3.10/site-packages/django/shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "/home/hunter/Dev/Python/community_church/.venv/lib/python3.10/site-packages/django/template/loader.py", line 62, in render_to_string
+    return template.render(context, request)
+  File "/home/hunter/Dev/Python/community_church/.venv/lib/python3.10/site-packages/django/template/backends/django.py", line 107, in render
+    return self.template.render(context)
+  File "/home/hunter/Dev/Python/community_church/.venv/lib/python3.10/site-packages/django/template/base.py", line 171, in render
+    return self._render(context)
+  File "/home/hunter/Dev/Python/community_church/.venv/lib/python3.10/site-packages/django/template/base.py", line 163, in _render
+    return self.nodelist.render(context)
+  File "/home/hunter/Dev/Python/community_church/.venv/lib/python3.10/site-packages/django/template/base.py", line 1008, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "/home/hunter/Dev/Python/community_church/.venv/lib/python3.10/site-packages/django/template/base.py", line 1008, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "/home/hunter/Dev/Python/community_church/.venv/lib/python3.10/site-packages/django/template/base.py", line 969, in render_annotated
+    return self.render(context)
+  File "/home/hunter/Dev/Python/community_church/.venv/lib/python3.10/site-packages/django/template/loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+  File "/home/hunter/Dev/Python/community_church/.venv/lib/python3.10/site-packages/django/template/base.py", line 163, in _render
+    return self.nodelist.render(context)
+  File "/home/hunter/Dev/Python/community_church/.venv/lib/python3.10/site-packages/django/template/base.py", line 1008, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "/home/hunter/Dev/Python/community_church/.venv/lib/python3.10/site-packages/django/template/base.py", line 1008, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "/home/hunter/Dev/Python/community_church/.venv/lib/python3.10/site-packages/django/template/base.py", line 969, in render_annotated
+    return self.render(context)
+  File "/home/hunter/Dev/Python/community_church/.venv/lib/python3.10/site-packages/django/template/loader_tags.py", line 65, in render
+    result = block.nodelist.render(context)
+  File "/home/hunter/Dev/Python/community_church/.venv/lib/python3.10/site-packages/django/template/base.py", line 1008, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "/home/hunter/Dev/Python/community_church/.venv/lib/python3.10/site-packages/django/template/base.py", line 1008, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "/home/hunter/Dev/Python/community_church/.venv/lib/python3.10/site-packages/django/template/base.py", line 969, in render_annotated
+    return self.render(context)
+  File "/home/hunter/Dev/Python/community_church/.venv/lib/python3.10/site-packages/django/template/defaulttags.py", line 243, in render
+    nodelist.append(node.render_annotated(context))
+  File "/home/hunter/Dev/Python/community_church/.venv/lib/python3.10/site-packages/django/template/base.py", line 969, in render_annotated
+    return self.render(context)
+  File "/home/hunter/Dev/Python/community_church/.venv/lib/python3.10/site-packages/django/template/defaulttags.py", line 480, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+  File "/home/hunter/Dev/Python/community_church/.venv/lib/python3.10/site-packages/django/urls/base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+  File "/home/hunter/Dev/Python/community_church/.venv/lib/python3.10/site-packages/django/urls/resolvers.py", line 831, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'submit_prayer_request' not found. 'submit_prayer_request' is not a valid view function or pattern name.
+"GET /prayer-request-types/ HTTP/1.1" 500 253592
+"GET /prayer-request-types/ HTTP/1.1" 200 45277
+"GET /static/css/custom.css HTTP/1.1" 200 11289
+"GET /create/ HTTP/1.1" 200 10364
+"GET /static/css/custom.css HTTP/1.1" 304 0
+Request GET parameters: <QueryDict: {}>
+Prayer types filter: []
+Sort by: -created_at, Sort field: -created_at
+"GET / HTTP/1.1" 200 22120
+"GET /static/css/custom.css HTTP/1.1" 304 0
+Request GET parameters: <QueryDict: {}>
+Prayer types filter: []
+Sort by: -created_at, Sort field: -created_at
+"GET / HTTP/1.1" 200 19384
+"GET /static/css/custom.css HTTP/1.1" 200 8879
+"GET /admin/ HTTP/1.1" 200 10645
+"GET /prayer-request-types/ HTTP/1.1" 200 42541
+"GET /static/css/custom.css HTTP/1.1" 304 0
+"GET /answered/ HTTP/1.1" 200 11052
+"GET /static/css/custom.css HTTP/1.1" 304 0
+"GET /create/ HTTP/1.1" 200 7628
+"GET /create/ HTTP/1.1" 200 13851
+"GET /static/css/custom.css HTTP/1.1" 304 0
+"POST /create/ HTTP/1.1" 302 0
+Request GET parameters: <QueryDict: {}>
+Prayer types filter: []
+Sort by: -created_at, Sort field: -created_at
+"GET / HTTP/1.1" 200 21582
+"GET /static/css/custom.css HTTP/1.1" 304 0
+"GET /request/19/ HTTP/1.1" 200 8117
+"GET /create/ HTTP/1.1" 200 13851
+"GET /create/ HTTP/1.1" 200 13901
+"GET /static/css/custom.css HTTP/1.1" 304 0
+"POST /create/ HTTP/1.1" 302 0
+Request GET parameters: <QueryDict: {}>
+Prayer types filter: []
+Sort by: -created_at, Sort field: -created_at
+"GET / HTTP/1.1" 200 23359
+"GET /request/20/ HTTP/1.1" 200 8127
+"GET /static/css/custom.css HTTP/1.1" 304 0
+"GET /prayer-request/20/edit/ HTTP/1.1" 200 8165
+"GET /request/20/ HTTP/1.1" 200 8127
+Request GET parameters: <QueryDict: {}>
+Prayer types filter: []
+Sort by: -created_at, Sort field: -created_at
+"GET / HTTP/1.1" 200 23360
+"GET /report/ HTTP/1.1" 200 25022
+Request GET parameters: <QueryDict: {}>
+Prayer types filter: []
+Sort by: -created_at, Sort field: -created_at
+"GET / HTTP/1.1" 200 23360
+"GET /static/css/custom.css HTTP/1.1" 304 0

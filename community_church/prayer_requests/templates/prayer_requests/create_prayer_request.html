@@ -3,35 +3,145 @@
 {% block title %}Create Prayer Request - Community Prayer Requests{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-8">
-        <div class="card">
-            <div class="card-header bg-primary text-white">
-                <h2 class="mb-0">Create a Prayer Request</h2>
+<div class="container-fluid px-4 py-3">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-10 col-lg-8 col-xl-7">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white py-3">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-pray me-3 fa-lg"></i>
+                        <h2 class="h4 mb-0">Create a Prayer Request</h2>
+                    </div>
+                    <p class="text-white-50 mb-0 mt-2 small">
+                        Share your prayer needs with our caring community. Your request will be treated with confidentiality and compassion.
+                    </p>
+                </div>
+                <div class="card-body p-4">
+                    <form method="POST" id="prayerRequestForm" novalidate>
+                        {% csrf_token %}
+                        <div class="row g-3">
+                            <div class="col-12 mb-3">
+                                <label for="title" class="form-label">Prayer Request Title <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="title" id="title" 
+                                       placeholder="A concise title for your prayer request" 
+                                       required maxlength="100"
+                                       data-bs-toggle="tooltip" 
+                                       title="Keep your title clear and specific">
+                                <div class="form-text text-muted">
+                                    <small>Tip: A clear title helps others understand your prayer need quickly.</small>
+                                </div>
+                            </div>
+                            
+                            <div class="col-12 mb-3">
+                                <label for="description" class="form-label">Prayer Request Description <span class="text-danger">*</span></label>
+                                <textarea class="form-control" name="description" id="description" 
+                                          rows="5" required 
+                                          placeholder="Share more details about your prayer request..."
+                                          maxlength="1000"
+                                          data-bs-toggle="tooltip"
+                                          title="Be as specific as you feel comfortable sharing"></textarea>
+                                <div class="form-text text-muted">
+                                    <small>
+                                        <i class="fas fa-info-circle me-1"></i> 
+                                        Your privacy is important. Share only what you're comfortable with.
+                                    </small>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="prayer_type" class="form-label">Prayer Request Type <span class="text-danger">*</span></label>
+                                <select class="form-select" name="prayer_type" id="prayer_type" required>
+                                    <option value="">Select a Prayer Type</option>
+                                    {% for value, label in prayer_types %}
+                                        <option value="{{ value }}">{{ label }}</option>
+                                    {% endfor %}
+                                </select>
+                                <div class="form-text text-muted">
+                                    <small>Choose the category that best describes your prayer need.</small>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="anonymity" class="form-label">Anonymity Preference</label>
+                                <select class="form-select" name="anonymity" id="anonymity">
+                                    <option value="named">Share with Name</option>
+                                    <option value="anonymous">Request Anonymously</option>
+                                </select>
+                                <div class="form-text text-muted">
+                                    <small>You can choose to share your name or remain anonymous.</small>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="alert alert-info mt-3 mb-0" role="alert">
+                            <i class="fas fa-hands-helping me-2"></i>
+                            Our community prays together. Your request will be shared confidentially with our prayer team.
+                        </div>
+                        
+                        <div class="d-grid mt-3">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-paper-plane me-2"></i> Submit Prayer Request
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <div class="card-body">
-                <form method="POST">
-                    {% csrf_token %}
-                    <div class="mb-3">
-                        <label for="title" class="form-label">Title</label>
-                        <input type="text" class="form-control" name="title" id="title" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="description" class="form-label">Description</label>
-                        <textarea class="form-control" name="description" id="description" rows="5" required></textarea>
-                    </div>
-                    <div class="mb-3">
-                        <label for="prayer_type" class="form-label">Prayer Request Type</label>
-                        <select class="form-select" name="prayer_type" id="prayer_type" required>
-                            {% for value, label in prayer_types %}
-                                <option value="{{ value }}">{{ label }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Submit Prayer Request</button>
-                </form>
+            
+            <div class="card mt-3 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="fas fa-question-circle me-2 text-primary"></i>
+                        About Prayer Requests
+                    </h5>
+                    <p class="card-text text-muted small">
+                        Prayer is a powerful way to seek comfort, guidance, and support. When you submit a prayer request:
+                    </p>
+                    <ul class="list-unstyled small">
+                        <li class="mb-2">
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            Your request will be treated with utmost confidentiality
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            Our prayer team will lift your request in prayer
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            You can remain anonymous if you prefer
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize tooltips
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    });
+
+    // Form validation
+    const form = document.getElementById('prayerRequestForm');
+    form.addEventListener('submit', function(event) {
+        if (!form.checkValidity()) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+        form.classList.add('was-validated');
+    }, false);
+
+    // Character count for description
+    const descriptionTextarea = document.getElementById('description');
+    descriptionTextarea.addEventListener('input', function() {
+        const remainingChars = 1000 - this.value.length;
+        this.setAttribute('data-bs-title', `${remainingChars} characters remaining`);
+    });
+});
+</script>
 {% endblock %}

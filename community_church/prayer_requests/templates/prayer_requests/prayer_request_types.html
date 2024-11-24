@@ -2,26 +2,155 @@
 {% block title %}Types of Prayer Requests - Community Prayer Requests{% endblock %}
 {% block content %}
 <div class="container mt-4">
-    <h1 class="mb-4">Types of Prayer Requests</h1>
-    <p class="lead">Here are the different types of prayer requests you can submit or pray for in our community:</p>
-
     <div class="row">
+        <div class="col-lg-8 offset-lg-2">
+            <h1 class="mb-4 text-center">Types of Prayer Requests</h1>
+            <div class="alert alert-info text-center" role="alert">
+                <i class="fas fa-info-circle me-2"></i>
+                Prayer is a powerful way to connect with God and support our community. Each type of prayer request reflects our shared hopes, challenges, and faith.
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4 prayer-types-grid">
         {% for prayer_type in prayer_types %}
-            <div class="col-md-6 mb-4">
-                <div class="card h-100">
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 prayer-type-card" data-bs-toggle="modal" data-bs-target="#prayerTypeModal{{ forloop.counter }}">
                     <div class="card-body">
-                        <h5 class="card-title">{{ prayer_type.name }}</h5>
-                        <p class="card-text">{{ prayer_type.description }}</p>
-                        <h6>Examples:</h6>
-                        <ul>
-                            {% for example in prayer_type.examples %}
-                                <li>{{ example }}</li>
-                            {% endfor %}
-                        </ul>
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="prayer-type-icon me-3">
+                                {% if prayer_type.name == 'Health' %}
+                                    <i class="fas fa-heartbeat text-danger"></i>
+                                {% elif prayer_type.name == 'Personal' %}
+                                    <i class="fas fa-user text-primary"></i>
+                                {% elif prayer_type.name == 'Family' %}
+                                    <i class="fas fa-home text-success"></i>
+                                {% elif prayer_type.name == 'Spiritual Growth' %}
+                                    <i class="fas fa-cross text-warning"></i>
+                                {% elif prayer_type.name == 'Community' %}
+                                    <i class="fas fa-people-carry text-info"></i>
+                                {% else %}
+                                    <i class="fas fa-pray text-secondary"></i>
+                                {% endif %}
+                            </div>
+                            <h5 class="card-title mb-0">{{ prayer_type.name }}</h5>
+                        </div>
+                        <p class="card-text text-muted">{{ prayer_type.description }}</p>
+                    </div>
+                    <div class="card-footer bg-transparent border-0 d-flex justify-content-between align-items-center">
+                        <small class="text-muted">{{ prayer_type.examples|length }} Example{{ prayer_type.examples|length|pluralize }}</small>
+                        <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#prayerTypeModal{{ forloop.counter }}">
+                            Learn More <i class="fas fa-chevron-right ms-2"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal for each prayer type -->
+            <div class="modal fade" id="prayerTypeModal{{ forloop.counter }}" tabindex="-1" aria-labelledby="prayerTypeModalLabel{{ forloop.counter }}" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="prayerTypeModalLabel{{ forloop.counter }}">{{ prayer_type.name }} Prayer Requests</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-md-4 text-center mb-3 mb-md-0">
+                                    <div class="prayer-type-icon-large mb-3">
+                                        {% if prayer_type.name == 'Health' %}
+                                            <i class="fas fa-heartbeat text-danger"></i>
+                                        {% elif prayer_type.name == 'Personal' %}
+                                            <i class="fas fa-user text-primary"></i>
+                                        {% elif prayer_type.name == 'Family' %}
+                                            <i class="fas fa-home text-success"></i>
+                                        {% elif prayer_type.name == 'Spiritual Growth' %}
+                                            <i class="fas fa-cross text-warning"></i>
+                                        {% elif prayer_type.name == 'Community' %}
+                                            <i class="fas fa-people-carry text-info"></i>
+                                        {% else %}
+                                            <i class="fas fa-pray text-secondary"></i>
+                                        {% endif %}
+                                    </div>
+                                    <h6 class="text-muted">{{ prayer_type.name }}</h6>
+                                </div>
+                                <div class="col-md-8">
+                                    <p class="mb-3">{{ prayer_type.description }}</p>
+                                    <h6>Example Prayers:</h6>
+                                    <ul class="list-group list-group-flush">
+                                        {% for example in prayer_type.examples %}
+                                            <li class="list-group-item d-flex align-items-center">
+                                                <i class="fas fa-chevron-right me-3 text-muted"></i>
+                                                {{ example }}
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <a href="{% url 'create_prayer_request' %}" class="btn btn-primary">
+                                <i class="fas fa-pray me-2"></i>Submit Prayer Request
+                            </a>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
                     </div>
                 </div>
             </div>
         {% endfor %}
     </div>
+
+    <div class="row mt-5">
+        <div class="col-lg-8 offset-lg-2">
+            <div class="card bg-light">
+                <div class="card-body">
+                    <h5 class="card-title text-center mb-4">
+                        <i class="fas fa-hands-helping me-2"></i>How to Pray Effectively
+                    </h5>
+                    <div class="row">
+                        <div class="col-md-4 text-center mb-3 mb-md-0">
+                            <div class="prayer-tip-icon mb-3">
+                                <i class="fas fa-heart text-primary"></i>
+                            </div>
+                            <h6>Be Sincere</h6>
+                            <small class="text-muted">Pray with genuine emotion and openness</small>
+                        </div>
+                        <div class="col-md-4 text-center mb-3 mb-md-0">
+                            <div class="prayer-tip-icon mb-3">
+                                <i class="fas fa-book-open text-success"></i>
+                            </div>
+                            <h6>Use Scripture</h6>
+                            <small class="text-muted">Ground your prayers in biblical wisdom</small>
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <div class="prayer-tip-icon mb-3">
+                                <i class="fas fa-listen text-warning"></i>
+                            </div>
+                            <h6>Listen</h6>
+                            <small class="text-muted">Be open to God's guidance and response</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const prayerTypeCards = document.querySelectorAll('.prayer-type-card');
+    
+    prayerTypeCards.forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.classList.add('shadow-lg');
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            this.classList.remove('shadow-lg');
+        });
+    });
+});
+</script>
 {% endblock %}

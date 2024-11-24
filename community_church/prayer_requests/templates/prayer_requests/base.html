@@ -23,7 +23,7 @@
         <nav id="sidebar" class="sidebar">
             <div class="sidebar-header">
                 <a href="{% url 'home' %}" class="sidebar-brand">
-                    <i class="fas fa-pray me-2"></i>Community Prayer
+                    <i class="fas fa-pray me-2"></i>Prayer Requests
                 </a>
             </div>
             <ul class="sidebar-menu list-unstyled">
@@ -56,32 +56,36 @@
             <header class="top-navbar">
                 <div class="container-fluid">
                     <div class="d-flex justify-content-between align-items-center">
-                        <button id="sidebar-toggle" class="btn btn-toggle-sidebar">
-                            <i class="fas fa-bars"></i>
-                        </button>
-                        <div class="top-navbar-right">
+                        <div class="top-navbar-right ms-auto">
+                            {% if user.is_authenticated %}
                             <div class="dropdown">
                                 <a href="#" class="dropdown-toggle nav-link" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="fas fa-user-circle"></i> <span class="ms-1">Account</span>
+                                    <i class="fas fa-user-circle"></i> <span class="ms-1 d-none d-md-inline text-white">{{ user.username }}</span>
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                    {% if user.is_authenticated %}
-                                        {% if user.is_superuser %}
-                                            <li><a class="dropdown-item" href="{% url 'admin:index' %}"><i class="fas fa-cog"></i> Admin Dashboard</a></li>
-                                            <li><hr class="dropdown-divider"></li>
-                                        {% endif %}
-                                        <li><a class="dropdown-item" href="{% url 'profile' %}"><i class="fas fa-user"></i> Profile</a></li>
+                                    {% if user.is_superuser %}
+                                        <li><a class="dropdown-item" href="{% url 'admin:index' %}"><i class="fas fa-cog"></i> Admin Dashboard</a></li>
                                         <li><hr class="dropdown-divider"></li>
-                                        <form action="{% url 'logout' %}" method="POST">
-                                            {% csrf_token %}
-                                            <button type="submit" class="dropdown-item"><i class="fas fa-sign-out-alt"></i> Logout</button>
-                                        </form>
-                                    {% else %}
-                                        <li><a class="dropdown-item" href="{% url 'login' %}"><i class="fas fa-sign-in-alt"></i> Login</a></li>
-                                        <li><a class="dropdown-item" href="{% url 'signup' %}"><i class="fas fa-user-plus"></i> Sign Up</a></li>
                                     {% endif %}
+                                    <li><a class="dropdown-item" href="{% url 'profile' %}"><i class="fas fa-user"></i> Profile</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <form action="{% url 'logout' %}" method="POST">
+                                        {% csrf_token %}
+                                        <button type="submit" class="dropdown-item"><i class="fas fa-sign-out-alt"></i> Logout</button>
+                                    </form>
                                 </ul>
                             </div>
+                            {% else %}
+                            <div class="dropdown">
+                                <a href="#" class="dropdown-toggle nav-link" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fas fa-user-circle"></i> <span class="ms-1 d-none d-md-inline text-white">Account</span>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                    <li><a class="dropdown-item" href="{% url 'login' %}"><i class="fas fa-sign-in-alt"></i> Login</a></li>
+                                    <li><a class="dropdown-item" href="{% url 'signup' %}"><i class="fas fa-user-plus"></i> Sign Up</a></li>
+                                </ul>
+                            </div>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -94,40 +98,17 @@
                     {% endblock %}
                 </div>
             </main>
-
-            <!-- Footer -->
-            <footer class="dashboard-footer">
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <p class="mb-0">&copy; 2024 Community Prayer. All rights reserved.</p>
-                        </div>
-                        <div class="col-md-6 text-md-end">
-                            <div class="footer-social-links">
-                                <a href="#"><i class="fab fa-facebook-f"></i></a>
-                                <a href="#"><i class="fab fa-twitter"></i></a>
-                                <a href="#"><i class="fab fa-instagram"></i></a>
-                                <a href="#"><i class="fab fa-linkedin-in"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </footer>
         </div>
     </div>
 
     <!-- Bootstrap JS Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        // Sidebar functionality
         document.addEventListener('DOMContentLoaded', function() {
             const sidebar = document.getElementById('sidebar');
             const sidebarToggle = document.getElementById('sidebar-toggle');
             const mainContent = document.querySelector('.main-content');
-
-            sidebarToggle.addEventListener('click', function() {
-                sidebar.classList.toggle('sidebar-collapsed');
-                mainContent.classList.toggle('sidebar-collapsed');
-            });
         });
     </script>
     {% block extra_js %}{% endblock %}
