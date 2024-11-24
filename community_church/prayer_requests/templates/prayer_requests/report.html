@@ -3,18 +3,122 @@
 
 {% block title %}Prayer Request Reports{% endblock %}
 
+{% block extra_css %}
+<style>
+    .stat-card {
+        transition: transform 0.2s;
+        border-radius: 10px;
+        border: none;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    .stat-card:hover {
+        transform: translateY(-5px);
+    }
+    .stat-icon {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+    }
+    .stat-title {
+        font-size: 0.9rem;
+        color: #6c757d;
+        margin-bottom: 0.25rem;
+    }
+    .stat-value {
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-bottom: 0;
+        color: #ffffff;
+    }
+    .chart-container {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        min-height: 400px;
+    }
+    .table-container {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        padding: 1.5rem;
+        margin-bottom: 3rem;
+    }
+    .filter-section {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+    }
+    /* Softer color scheme for stat cards */
+    .bg-soft-primary {
+        background: linear-gradient(45deg, #6366f1, #818cf8);
+    }
+    .bg-soft-success {
+        background: linear-gradient(45deg, #34d399, #6ee7b7);
+    }
+    .bg-soft-info {
+        background: linear-gradient(45deg, #60a5fa, #93c5fd);
+    }
+    .bg-soft-warning {
+        background: linear-gradient(45deg, #fbbf24, #fcd34d);
+    }
+</style>
+{% endblock %}
+
 {% block content %}
-<div class="container mt-4">
-    <h1 class="mb-4">Prayer Request Reports</h1>
+<div class="container-fluid mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Prayer Request Analytics</h1>
+        <div class="filter-section">
+            <form method="get" class="d-flex align-items-center">
+                <label class="me-2">Time Range:</label>
+                <select name="date_range" class="form-select" onchange="this.form.submit()">
+                    <option value="7" {% if selected_days == 7 %}selected{% endif %}>Last 7 days</option>
+                    <option value="30" {% if selected_days == 30 %}selected{% endif %}>Last 30 days</option>
+                    <option value="90" {% if selected_days == 90 %}selected{% endif %}>Last 90 days</option>
+                    <option value="365" {% if selected_days == 365 %}selected{% endif %}>Last year</option>
+                </select>
+            </form>
+        </div>
+    </div>
 
-    <div class="row">
-        <div class="col-md-12">
-            <div class="card">
+    <div class="row g-4">
+        <!-- Summary Statistics -->
+        <div class="col-md-3">
+            <div class="stat-card card bg-soft-primary">
                 <div class="card-body">
-                    <h5 class="card-title">Summary</h5>
-                    <p>Total Prayer Requests: {{ total_requests }}</p>
-                    <p>Answered Prayers: {{ answered_prayers }}</p>
-                    <p>Open Prayer Requests: {{ open_requests }}</p>
+                    <i class="fas fa-pray stat-icon text-white"></i>
+                    <div class="stat-title text-white-50">Total Prayers</div>
+                    <div class="stat-value">{{ total_requests }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card card bg-soft-success">
+                <div class="card-body">
+                    <i class="fas fa-check-circle stat-icon text-white"></i>
+                    <div class="stat-title text-white-50">Answered Prayers</div>
+                    <div class="stat-value">{{ answered_prayers }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card card bg-soft-info">
+                <div class="card-body">
+                    <i class="fas fa-users stat-icon text-white"></i>
+                    <div class="stat-title text-white-50">Active Users</div>
+                    <div class="stat-value">{{ active_users }} / {{ total_users }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card card bg-soft-warning">
+                <div class="card-body">
+                    <i class="fas fa-clock stat-icon text-white"></i>
+                    <div class="stat-title text-white-50">Avg. Response Time</div>
+                    <div class="stat-value">{{ avg_response_days }} days</div>
                 </div>
             </div>
         </div>
@@ -22,131 +126,142 @@
 
     <div class="row mt-4">
         <div class="col-md-6">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Prayer Request Types</h5>
-                    <div style="height: 300px;">
-                        <canvas id="prayerTypeChart"></canvas>
-                    </div>
-                </div>
+            <div class="chart-container">
+                <h5 class="mb-4">Prayer Request Types</h5>
+                <canvas id="prayerTypeChart"></canvas>
             </div>
         </div>
         <div class="col-md-6">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Prayer Request Status</h5>
-                    <div style="height: 300px;">
-                        <canvas id="statusChart"></canvas>
-                    </div>
-                </div>
+            <div class="chart-container">
+                <h5 class="mb-4">Prayer Request Status</h5>
+                <canvas id="statusChart"></canvas>
             </div>
         </div>
     </div>
 
     <div class="row mt-4">
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Prayer Request Trends (Last 30 Days)</h5>
-                    <div style="height: 300px;">
-                        <canvas id="trendChart"></canvas>
-                    </div>
-                </div>
+        <div class="col-md-8">
+            <div class="chart-container">
+                <h5 class="mb-4">Prayer Request Trends</h5>
+                <canvas id="trendChart"></canvas>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="chart-container">
+                <h5 class="mb-4">Time of Day Distribution</h5>
+                <canvas id="hourChart"></canvas>
             </div>
         </div>
     </div>
 
     <div class="row mt-4">
-        <div class="col-md-12">
-            <h2>Recent Prayer Requests</h2>
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>Title</th>
-                        <th>Prayer Type</th>
-                        <th>Created By</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for request in recent_requests %}
-                    <tr>
-                        <td>{{ request.created_at|date:"Y-m-d" }}</td>
-                        <td>{{ request.title }}</td>
-                        <td>{{ request.get_prayer_type_display }}</td>
-                        <td>{{ request.created_by.username }}</td>
-                        <td>{% if request.is_answered %}Answered{% else %}Open{% endif %}</td>
-                    </tr>
-                    {% empty %}
-                    <tr>
-                        <td colspan="4">No recent prayer requests found.</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+        <div class="col-12">
+            <div class="table-container">
+                <h5 class="mb-4">Recent Prayer Requests</h5>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Title</th>
+                                <th>Prayer Type</th>
+                                <th>Created By</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for request in recent_requests %}
+                            <tr>
+                                <td>{{ request.created_at|date:"Y-m-d" }}</td>
+                                <td>
+                                    <a href="{% url 'prayer_request_detail' pk=request.pk %}">
+                                        {{ request.title }}
+                                    </a>
+                                </td>
+                                <td>{{ request.get_prayer_type_display }}</td>
+                                <td>{{ request.created_by.username }}</td>
+                                <td>
+                                    <span class="badge {% if request.is_answered %}bg-success{% else %}bg-warning{% endif %}">
+                                        {% if request.is_answered %}Answered{% else %}Open{% endif %}
+                                    </span>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="5" class="text-center">No recent prayer requests found.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 {% endblock %}
 
 {% block extra_js %}
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    const prayerTypeLabels = JSON.parse('{{ prayer_type_labels|escapejs|safe }}');
-    const prayerTypeData = JSON.parse('{{ prayer_type_data|escapejs|safe }}');
-    const statusLabels = JSON.parse('{{ status_labels|escapejs|safe }}');
-    const statusData = JSON.parse('{{ status_data|escapejs|safe }}');
-    const trendLabels = JSON.parse('{{ trend_labels|escapejs|safe }}');
-    const trendData = JSON.parse('{{ trend_data|escapejs|safe }}');
-
-    // Common chart options
-    const commonOptions = {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-            legend: {
-                position: 'top',
-            }
-        }
-    };
-
     document.addEventListener('DOMContentLoaded', function() {
+        // Chart color scheme
+        const chartColors = {
+            primary: ['#6366f1', '#818cf8', '#c7d2fe'],
+            success: ['#34d399', '#6ee7b7', '#d1fae5'],
+            warning: ['#fbbf24', '#fcd34d', '#fef3c7'],
+            info: ['#60a5fa', '#93c5fd', '#dbeafe']
+        };
+
+        // Common chart options
+        const commonOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        padding: 20,
+                        font: { size: 12 }
+                    }
+                }
+            }
+        };
+
         // Prayer Type Chart
         const prayerTypeCtx = document.getElementById('prayerTypeChart');
-        if (prayerTypeCtx && prayerTypeLabels.length > 0) {
+        if (prayerTypeCtx) {
             new Chart(prayerTypeCtx, {
-                type: 'pie',
+                type: 'doughnut',
                 data: {
-                    labels: prayerTypeLabels,
+                    labels: {{ prayer_type_labels|safe }},
                     datasets: [{
-                        data: prayerTypeData,
+                        data: {{ prayer_type_data|safe }},
                         backgroundColor: [
-                            'rgba(255, 99, 132, 0.8)',
-                            'rgba(54, 162, 235, 0.8)',
-                            'rgba(255, 206, 86, 0.8)',
-                            'rgba(75, 192, 192, 0.8)',
-                            'rgba(153, 102, 255, 0.8)',
-                            'rgba(255, 159, 64, 0.8)'
+                            chartColors.primary[0],
+                            chartColors.success[0],
+                            chartColors.warning[0],
+                            chartColors.info[0]
                         ]
                     }]
                 },
-                options: commonOptions
+                options: {
+                    ...commonOptions,
+                    cutout: '60%'
+                }
             });
         }
 
         // Status Chart
         const statusCtx = document.getElementById('statusChart');
-        if (statusCtx && statusLabels.length > 0) {
+        if (statusCtx) {
             new Chart(statusCtx, {
-                type: 'doughnut',
+                type: 'pie',
                 data: {
-                    labels: statusLabels,
+                    labels: {{ status_labels|safe }},
                     datasets: [{
-                        data: statusData,
+                        data: {{ status_data|safe }},
                         backgroundColor: [
-                            'rgba(75, 192, 192, 0.8)',
-                            'rgba(255, 99, 132, 0.8)'
+                            chartColors.success[0],
+                            chartColors.warning[0]
                         ]
                     }]
                 },
@@ -156,18 +271,29 @@
 
         // Trend Chart
         const trendCtx = document.getElementById('trendChart');
-        if (trendCtx && trendLabels.length > 0) {
+        if (trendCtx) {
             new Chart(trendCtx, {
                 type: 'line',
                 data: {
-                    labels: trendLabels,
-                    datasets: [{
-                        label: 'Daily Prayer Requests',
-                        data: trendData,
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                        tension: 0.1
-                    }]
+                    labels: {{ trend_labels|safe }},
+                    datasets: [
+                        {
+                            label: 'Total Requests',
+                            data: {{ trend_total_data|safe }},
+                            borderColor: chartColors.primary[0],
+                            backgroundColor: chartColors.primary[2],
+                            tension: 0.3,
+                            fill: true
+                        },
+                        {
+                            label: 'Answered Requests',
+                            data: {{ trend_answered_data|safe }},
+                            borderColor: chartColors.success[0],
+                            backgroundColor: chartColors.success[2],
+                            tension: 0.3,
+                            fill: true
+                        }
+                    ]
                 },
                 options: {
                     ...commonOptions,
@@ -183,6 +309,42 @@
                             title: {
                                 display: true,
                                 text: 'Date'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Hour Distribution Chart
+        const hourCtx = document.getElementById('hourChart');
+        if (hourCtx) {
+            new Chart(hourCtx, {
+                type: 'bar',
+                data: {
+                    labels: {{ hour_labels|safe }}.map(h => `${h}:00`),
+                    datasets: [{
+                        label: 'Prayer Requests',
+                        data: {{ hour_data|safe }},
+                        backgroundColor: chartColors.info[1],
+                        borderColor: chartColors.info[0],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    ...commonOptions,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Number of Requests'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Hour of Day'
                             }
                         }
                     }
