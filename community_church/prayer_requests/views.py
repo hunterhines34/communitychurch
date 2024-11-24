@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import PrayerRequest
+from .models import PrayerRequest, Comment
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect
@@ -52,7 +52,23 @@ def home(request):
 # Detail view for a specific prayer request
 def prayer_request_detail(request, pk):
     prayer_request = get_object_or_404(PrayerRequest, pk=pk)
-    return render(request, 'prayer_requests/prayer_request_detail.html', {'prayer_request': prayer_request})
+    comments = prayer_request.comments.all()
+    
+    if request.method == 'POST' and request.user.is_authenticated:
+        comment_text = request.POST.get('comment')
+        if comment_text:
+            Comment.objects.create(
+                prayer_request=prayer_request,
+                author=request.user,
+                text=comment_text
+            )
+            messages.success(request, 'Comment added successfully.')
+            return redirect('prayer_request_detail', pk=pk)
+    
+    return render(request, 'prayer_requests/prayer_request_detail.html', {
+        'prayer_request': prayer_request,
+        'comments': comments
+    })
 
 # View to see Answered prayers
 @login_required
@@ -251,8 +267,15 @@ def prayer_request_types(request):
         }
     ]
     return render(request, 'prayer_requests/prayer_request_types.html', {'prayer_types': prayer_types})
-# Prayer Request Reports view
+
 def report_view(request):
+    from django.db.models import Count
+    from django.db.models.functions import TruncDate
+    from datetime import datetime, timedelta
+    import json
+    from django.core.serializers.json import DjangoJSONEncoder
+
+    # Calculate statistics
     total_requests = PrayerRequest.objects.count()
     answered_prayers = PrayerRequest.objects.filter(is_answered=True).count()
     open_requests = PrayerRequest.objects.filter(is_answered=False).count()
@@ -260,21 +283,85 @@ def report_view(request):
 
     # Prayer Type Chart Data
     prayer_type_labels = [type[1] for type in PrayerRequest.PRAYER_TYPES]
-    prayer_type_data = [PrayerRequest.objects.filter(prayer_type=type[0]).count() for type in PrayerRequest.PRAYER_TYPES]
+    prayer_type_data = [PrayerRequest.objects.filter(prayer_type=type[0]).count() 
+                       for type in PrayerRequest.PRAYER_TYPES]
 
     # Status Chart Data
     status_labels = ['Answered', 'Open']
     status_data = [answered_prayers, open_requests]
 
+    # Trend Chart Data (last 30 days)
+    end_date = datetime.now().date()
+    start_date = end_date - timedelta(days=29)
+    
+    daily_counts = (
+        PrayerRequest.objects
+        .filter(created_at__date__range=[start_date, end_date])
+        .annotate(date=TruncDate('created_at'))
+        .values('date')
+        .annotate(count=Count('id'))
+        .order_by('date')
+    )
+
+    # Create a complete date range with zeros for days without requests
+    date_range = {(start_date + timedelta(days=x)).strftime('%Y-%m-%d'): 0 
+                 for x in range(30)}
+    
+    # Fill in actual counts
+    for entry in daily_counts:
+        date_str = entry['date'].strftime('%Y-%m-%d')
+        date_range[date_str] = entry['count']
+
+    # Prepare trend data for the chart
+    trend_labels = list(date_range.keys())
+    trend_data = list(date_range.values())
+
+    # Prepare context with proper JSON serialization
     context = {
         'total_requests': total_requests,
         'answered_prayers': answered_prayers,
         'open_requests': open_requests,
         'recent_requests': recent_requests,
-        'prayer_type_labels': prayer_type_labels,
-        'prayer_type_data': prayer_type_data,
-        'status_labels': status_labels,
-        'status_data': status_data,
+        'prayer_type_labels': json.dumps(prayer_type_labels, cls=DjangoJSONEncoder),
+        'prayer_type_data': json.dumps(prayer_type_data, cls=DjangoJSONEncoder),
+        'status_labels': json.dumps(status_labels, cls=DjangoJSONEncoder),
+        'status_data': json.dumps(status_data, cls=DjangoJSONEncoder),
+        'trend_labels': json.dumps(trend_labels, cls=DjangoJSONEncoder),
+        'trend_data': json.dumps(trend_data, cls=DjangoJSONEncoder),
     }
 
     return render(request, 'prayer_requests/report.html', context)
+
+@login_required
+def edit_comment(request, comment_id):
+    comment = get_object_or_404(Comment, pk=comment_id)
+    
+    # Check if user has permission to edit
+    if not (request.user == comment.author or request.user.is_superuser):
+        return HttpResponseForbidden("You don't have permission to edit this comment.")
+    
+    if request.method == 'POST':
+        new_text = request.POST.get('comment_text')
+        if new_text:
+            comment.text = new_text
+            comment.save()
+            messages.success(request, 'Comment updated successfully.')
+        return redirect('prayer_request_detail', pk=comment.prayer_request.pk)
+    
+    return HttpResponseForbidden("Invalid request method.")
+
+@login_required
+def delete_comment(request, comment_id):
+    comment = get_object_or_404(Comment, pk=comment_id)
+    
+    # Check if user has permission to delete
+    if not (request.user == comment.author or request.user.is_superuser):
+        return HttpResponseForbidden("You don't have permission to delete this comment.")
+    
+    if request.method == 'POST':
+        prayer_request_id = comment.prayer_request.pk
+        comment.delete()
+        messages.success(request, 'Comment deleted successfully.')
+        return redirect('prayer_request_detail', pk=prayer_request_id)
+    
+    return HttpResponseForbidden("Invalid request method.")

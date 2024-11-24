@@ -21,6 +21,42 @@
     </div>
 
     <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Prayer Request Types</h5>
+                    <div style="height: 300px;">
+                        <canvas id="prayerTypeChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Prayer Request Status</h5>
+                    <div style="height: 300px;">
+                        <canvas id="statusChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Prayer Request Trends (Last 30 Days)</h5>
+                    <div style="height: 300px;">
+                        <canvas id="trendChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
         <div class="col-md-12">
             <h2>Recent Prayer Requests</h2>
             <table class="table table-striped">
@@ -51,80 +87,108 @@
             </table>
         </div>
     </div>
+</div>
+{% endblock %}
 
-    <!-- <div class="row mt-4">
-        <div class="col-md-6">
-            <h2>Prayer Request Types</h2>
-            <canvas id="prayerTypeChart"></canvas>
-        </div>
-        <div class="col-md-6">
-            <h2>Prayer Request Status</h2>
-            <canvas id="statusChart"></canvas>
-        </div>
-    </div> -->
-    {% endblock %}
-    
-    {% block extra_js %}
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const prayerTypeLabels = JSON.parse('{{ prayer_type_labels|escapejs|safe }}');
+    const prayerTypeData = JSON.parse('{{ prayer_type_data|escapejs|safe }}');
+    const statusLabels = JSON.parse('{{ status_labels|escapejs|safe }}');
+    const statusData = JSON.parse('{{ status_data|escapejs|safe }}');
+    const trendLabels = JSON.parse('{{ trend_labels|escapejs|safe }}');
+    const trendData = JSON.parse('{{ trend_data|escapejs|safe }}');
+
+    // Common chart options
+    const commonOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                position: 'top',
+            }
+        }
+    };
+
+    document.addEventListener('DOMContentLoaded', function() {
         // Prayer Type Chart
-        var ctxPrayerType = document.getElementById('prayerTypeChart').getContext('2d');
-        var prayerTypeChart = new Chart(ctxPrayerType, {
-            type: 'pie',
-            data: {
-                labels: {{ prayer_type_labels|safe }},
-                datasets: [{
-                    data: {{ prayer_type_data|safe }},
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.8)',
-                        'rgba(54, 162, 235, 0.8)',
-                        'rgba(255, 206, 86, 0.8)',
-                        'rgba(75, 192, 192, 0.8)',
-                        'rgba(153, 102, 255, 0.8)',
-                        'rgba(255, 159, 64, 0.8)',
-                    ]
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        position: 'top',
-                    },
-                    title: {
-                        display: true,
-                        text: 'Prayer Request Types'
-                    }
-                }
-            }
-        });
-    
+        const prayerTypeCtx = document.getElementById('prayerTypeChart');
+        if (prayerTypeCtx && prayerTypeLabels.length > 0) {
+            new Chart(prayerTypeCtx, {
+                type: 'pie',
+                data: {
+                    labels: prayerTypeLabels,
+                    datasets: [{
+                        data: prayerTypeData,
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.8)',
+                            'rgba(54, 162, 235, 0.8)',
+                            'rgba(255, 206, 86, 0.8)',
+                            'rgba(75, 192, 192, 0.8)',
+                            'rgba(153, 102, 255, 0.8)',
+                            'rgba(255, 159, 64, 0.8)'
+                        ]
+                    }]
+                },
+                options: commonOptions
+            });
+        }
+
         // Status Chart
-        var ctxStatus = document.getElementById('statusChart').getContext('2d');
-        var statusChart = new Chart(ctxStatus, {
-            type: 'doughnut',
-            data: {
-                labels: {{ status_labels|safe }},
-                datasets: [{
-                    data: {{ status_data|safe }},
-                    backgroundColor: [
-                        'rgba(75, 192, 192, 0.8)',
-                        'rgba(255, 206, 86, 0.8)'
-                    ]
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        position: 'top'
-                    },
-                    title: {
-                        display: true,
-                        text: 'Prayer Request Status'
+        const statusCtx = document.getElementById('statusChart');
+        if (statusCtx && statusLabels.length > 0) {
+            new Chart(statusCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: statusLabels,
+                    datasets: [{
+                        data: statusData,
+                        backgroundColor: [
+                            'rgba(75, 192, 192, 0.8)',
+                            'rgba(255, 99, 132, 0.8)'
+                        ]
+                    }]
+                },
+                options: commonOptions
+            });
+        }
+
+        // Trend Chart
+        const trendCtx = document.getElementById('trendChart');
+        if (trendCtx && trendLabels.length > 0) {
+            new Chart(trendCtx, {
+                type: 'line',
+                data: {
+                    labels: trendLabels,
+                    datasets: [{
+                        label: 'Daily Prayer Requests',
+                        data: trendData,
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    ...commonOptions,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Number of Requests'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Date'
+                            }
+                        }
                     }
                 }
-            }
-        });
-    </script>
-    {% endblock %}
+            });
+        }
+    });
+</script>
+{% endblock %}

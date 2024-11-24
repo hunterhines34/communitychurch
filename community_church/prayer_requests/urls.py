@@ -18,6 +18,8 @@ urlpatterns = [
     path('mark-answered/<int:pk>/', views.mark_prayer_answered, name='mark_prayer_answered'),
     path('mark-unanswered/<int:pk>/', views.mark_prayer_unanswered, name='mark_prayer_unanswered'),
     path('report/', views.report_view, name='prayer_request_report'),
+    path('comment/<int:comment_id>/edit/', views.edit_comment, name='edit_comment'),
+    path('comment/<int:comment_id>/delete/', views.delete_comment, name='delete_comment'),
     # Password reset urls
     path('password_reset/', auth_views.PasswordResetView.as_view(), name='password_reset'),
     path('password_reset/done/', auth_views.PasswordResetDoneView.as_view(), name='password_reset_done'),
